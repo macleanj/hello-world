@@ -1,3 +1,5 @@
+<!-- Images are build by Docker HUB Build directly connected to the GIT Hub git hook -->
+
 # Hello World
 This GIT repo and image is used for versioning and deployment testing in extreemly simple CICD pipelines.
 
