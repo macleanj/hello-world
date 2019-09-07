@@ -1,5 +1,5 @@
 helloworld:
   # build: .
-  image: jmaclean/hello-world:v1
+  image: jmaclean/hello-world:v2
   ports:
     - "80:80"
