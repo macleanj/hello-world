@@ -1,5 +1,11 @@
-helloworld:
-  # build: .
-  image: jmaclean/hello-world:v2
-  ports:
-    - "80:80"
+version: "3.7"
+
+services:
+  helloworld:
+    build:
+      context: ./build
+      dockerfile: Dockerfile
+    image: jmaclean/hello-world:v1
+    ports:
+      - "80:80"
+      - "443:443"
