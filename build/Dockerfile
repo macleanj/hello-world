@@ -1,6 +1,11 @@
 FROM alpine:3.4
 
-RUN apk --update add nginx php5-fpm && \
+RUN apk --update add \
+    nginx \
+    php5-fpm \
+    net-tools \
+    bind-tools \
+    bash && \
     mkdir -p /run/nginx
 
 ADD www /www
@@ -14,4 +19,4 @@ ENV LISTEN_PORT=80
 EXPOSE 80 443
 CMD /run.sh
 
-ENV VERSION=v2
+ENV VERSION=v3
