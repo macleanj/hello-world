@@ -6,3 +6,6 @@ This GIT repo and image is used for versioning and deployment testing in extreme
 # How it works
 The docker image created includes the html page displaying a version number. This version number is controlled by the VERSION environment variable (which in itself can be controlled by any other external effects like Jenkins). </br>
 The page can be views on port 80 and 443 (self signed certificate).
+
+# Persistence
+In some cases persistenceStorage needs to be tested in the cloud environment. The persistenceStorage section offers the capabilities to simply upload files to the server. The files will uploaded to the directory ```/data```. In turn, this directory can than be used to test persistenceStorage.
