@@ -27,4 +27,8 @@ ENV LISTEN_PORT=80
 EXPOSE 80 443
 CMD /run.sh
 
-ENV VERSION=v3
+RUN \
+  mkdir /data && \
+  chown 777 /data
+
+ENV VERSION=v4

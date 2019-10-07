@@ -22,7 +22,7 @@
 
 			if(isset($_FILES['image'])){
 				$errors= array();
-				$file_name = $_FILES['image']['name'];
+				$file_name = basename($_FILES['image']['name']);
 				$file_size =$_FILES['image']['size'];
 				$file_tmp =$_FILES['image']['tmp_name'];
 				$file_type=$_FILES['image']['type'];
@@ -39,8 +39,12 @@
 				}
 				
 				if(empty($errors)==true){
-					move_uploaded_file($file_tmp,$dir.$file_name);
-					// echo "Success";
+					// echo "sys_dir = " . sys_get_temp_dir() . "<br>";
+					if (move_uploaded_file($file_tmp, $dir.$file_name)) {
+						// echo "$file_tmp,$dir$file_name";
+					}else{
+						die ("no file in move_upload_file: " . strtolower($dir.$file_name));
+					}
 				}else{
 					print_r($errors);
 				}
@@ -48,12 +52,13 @@
 		?>
 
 		<form action="" method="POST" enctype="multipart/form-data">
-			<input type="file" name="image" />
-			<input type="submit"/>
+			<p>Select file to upload:</p>
+			<input type="file" name="image"/>
+			<input type="submit" value="Upload file"/>
 		</form>
 
 		<br>
-		<hr><p>File already present on the system (/data)</p> <hr>
+		<hr><p>Files already present on the system (/data)</p> <hr>
 		<?php
 			if ($dir_list = opendir($dir)){
 				while(($filename = readdir($dir_list)) != false)
