@@ -29,6 +29,6 @@ CMD /run.sh
 
 RUN \
   mkdir /data && \
-  chown 777 /data
+  chmod 777 /data
 
 ENV VERSION=v4
