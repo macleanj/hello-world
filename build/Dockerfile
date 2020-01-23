@@ -1,34 +1,28 @@
-FROM alpine:3.4
+FROM bitnami/nginx:1.16.0
 
-RUN apk --update add \
-    nginx \
-    php5-fpm \
-    net-tools \
-    bind-tools \
-    bash && \
-    mkdir -p /run/nginx
+LABEL maintainer="Jerome Mac Lean"
+LABEL description="Small hello-world application to test Cloud and CICD solutions"
 
-# # Add Mongo (180MB)
-# RUN \
-#   echo 'http://dl-cdn.alpinelinux.org/alpine/v3.6/main' >> /etc/apk/repositories && \
-#   echo 'http://dl-cdn.alpinelinux.org/alpine/v3.6/community' >> /etc/apk/repositories && \
-#   apk update && \
-#   apk add mongodb=3.4.4-r0 && \
-#   rm -rf /var/cache/apk/*
+USER root
+RUN mkdir -p /var/lib/apt/lists/partial && \
+    apt-get update && \
+    apt-get -y upgrade && \
+    apt-get -y install \
+      gosu \
+      php7.0-fpm && \
+    rm -r /var/lib/apt/lists /var/cache/apt/archives
 
-ADD www /www
-ADD nginx.conf /etc/nginx/
-ADD php-fpm.conf /etc/php5/php-fpm.conf
+RUN mkdir /data && \
+    chmod 777 /data
+    # chmod -R 777 /var/log
+
+USER 1001
+ADD www /app
+ADD nginx.conf /opt/bitnami/nginx/conf/server_blocks/
+ADD php-fpm.conf /etc/php/7.0/fpm/
+ADD ssl/certs/* /opt/bitnami/nginx/conf/server_blocks/ssl/certs/
 ADD run.sh /run.sh
-ADD ssl /ssl
 
-ENV LISTEN_PORT=80
 
-EXPOSE 80 443
+EXPOSE 8080 8443
 CMD /run.sh
-
-RUN \
-  mkdir /data && \
-  chmod 777 /data
-
-ENV VERSION=v4

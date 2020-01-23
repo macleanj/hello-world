@@ -4,13 +4,19 @@ services:
   hello-world:
     hostname: hello-world
     container_name: hello-world
-    # build:
-    #   context: ./build
-    #   dockerfile: Dockerfile
-    image: jmaclean/hello-world:v4
+    build:
+      context: ./build
+      dockerfile: Dockerfile
+    image: jmaclean/hello-world
+    # env_file order matters. The last one is leading
+    # env_file:
+    #   - generic.conf
+    #   - ${BRANCH_ENV}.conf
+    #   - ${BUILD_ENV}.conf
+    #   - ${DEPLOY_ENV}.conf
     ports:
-      - "80:80"
-      - "443:443"
+      - "80:8080"
+      - "443:8443"
     volumes: 
-      - ./build/data:/data
-      - ./build/www:/www
+      - ./www:/app
+      - ./build/data:/data # For fast development
