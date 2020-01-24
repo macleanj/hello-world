@@ -14,8 +14,18 @@ pipeline {
     buildTag = "${GIT_COMMIT}-b${BUILD_NUMBER}"
     versionTag = "${imageVersion}-b${BUILD_NUMBER}"
   }
-  agent any
-  stages {
+  
+  agent {
+    kubernetes {
+      label 'jenkins-agent-server'
+      defaultContainer 'jnlp'
+      cloud 'openshift'
+      instanceCap 1
+      yamlFile '.jenkins.pod.yml'
+    }
+  }
+
+stages {
     // stage('Cloning Git') {
     //   steps {
     //     git 'https://github.com/macleanj/hello-world.git'
