@@ -1,8 +1,18 @@
 pipeline {
   environment {
-    registry = "jmaclean/docker_hub_account/poc-trigger-by-tag"
+    registry = "jmaclean/cicd-triggered-by-tag"
     registryCredential = 'futurice-jmaclean-docker'
     dockerImage = ''
+
+    dockerRegistry = "jmaclean/cicd-triggered-by-tag"
+    dockerPath = 'build'
+    dockerFile = 'Dockerfile'
+    imageGroup = 'tdd/' // If any, otherwise leave blank. Example: "imageGroup = 'tdd/'"
+    imageName = 'pdi-kettle'
+    imageVersion = '8.2.0.0-342'
+    imagePath = "${imageGroup}${imageName}"
+    buildTag = "${GIT_COMMIT}-b${BUILD_NUMBER}"
+    versionTag = "${imageVersion}-b${BUILD_NUMBER}"
   }
   agent any
   stages {
@@ -14,7 +24,9 @@ pipeline {
     stage('Building image') {
       steps{
         script {
-          dockerImage = docker.build registry + ":$BUILD_NUMBER"
+          dockerImage = docker.build("${registry}:${BUILD_NUMBER}", "-f ${dockerFile} .")
+          // dockerImage = docker.build("${imagePath}:${buildTag}", "-f ${dockerFile} .")
+          // dockerImage = docker.build registry + ":$BUILD_NUMBER"
         }
       }
     }
