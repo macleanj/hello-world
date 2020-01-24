@@ -9,14 +9,14 @@ services:
       dockerfile: Dockerfile
     image: jmaclean/hello-world
     # env_file order matters. The last one is leading
-    # env_file:
-    #   - generic.conf
-    #   - ${BRANCH_ENV}.conf
-    #   - ${BUILD_ENV}.conf
-    #   - ${DEPLOY_ENV}.conf
+    env_file:
+      - build/www/config/generic.conf
+      - build/www/config/branch_${BRANCH_TAG}.conf
+      - build/www/config/deploy_${DEPLOY_TAG}.conf
     ports:
       - "80:8080"
       - "443:8443"
     volumes: 
-      - ./www:/app
+      - ./build/www:/app
+      # - ./build/config:/config
       - ./build/data:/data # For fast development

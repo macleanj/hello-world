@@ -12,12 +12,9 @@ RUN mkdir -p /var/lib/apt/lists/partial && \
       php7.0-fpm && \
     rm -r /var/lib/apt/lists /var/cache/apt/archives
 
-RUN mkdir /data && \
-    chmod 777 /data
-    # chmod -R 777 /var/log
-
 USER 1001
 ADD www /app
+ADD config /config
 ADD nginx.conf /opt/bitnami/nginx/conf/server_blocks/
 ADD php-fpm.conf /etc/php/7.0/fpm/
 ADD ssl/certs/* /opt/bitnami/nginx/conf/server_blocks/ssl/certs/
