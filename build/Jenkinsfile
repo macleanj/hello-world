@@ -16,12 +16,8 @@ pipeline {
   }
   
   agent {
-    kubernetes {
-      label 'jenkins-agent-server'
-      defaultContainer 'jnlp'
-      cloud 'openshift'
-      instanceCap 1
-      yamlFile '.jenkins.pod.yml'
+    node {
+      label 'nodejs8'
     }
   }
 
