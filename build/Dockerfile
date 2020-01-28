@@ -13,13 +13,12 @@ RUN mkdir -p /var/lib/apt/lists/partial && \
     rm -r /var/lib/apt/lists /var/cache/apt/archives
 
 USER 1001
-ADD www /app
+ADD app/www /app
 # ADD config /config
-ADD nginx.conf /opt/bitnami/nginx/conf/server_blocks/
-ADD php-fpm.conf /etc/php/7.0/fpm/
-ADD ssl/certs/* /opt/bitnami/nginx/conf/server_blocks/ssl/certs/
-ADD run.sh /run.sh
-
+ADD app/nginx.conf /opt/bitnami/nginx/conf/server_blocks/
+ADD app/php-fpm.conf /etc/php/7.0/fpm/
+ADD app/ssl/certs/* /opt/bitnami/nginx/conf/server_blocks/ssl/certs/
+ADD app/run.sh /run.sh
 
 EXPOSE 8080 8443
 CMD /run.sh

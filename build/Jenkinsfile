@@ -15,80 +15,29 @@ pipeline {
     versionTag = "${imageVersion}-b${BUILD_NUMBER}"
   }
   
-  agent {
-    kubernetes {
-      label 'demo'
-      defaultContainer 'jnlp'
-      yaml """
----
-apiVersion: v1
-kind: Pod
-metadata:
-  labels:
-    jenkins/kube-default: true
-    app: jenkins
-    component: agent
-spec:
-  containers:
-    # - name: jnlp
-    #   image: <jnlp-image-here>
-    #   resources:
-    #     limits:
-    #       cpu: 1
-    #       memory: 2Gi
-    #     requests:
-    #       cpu: 1
-    #       memory: 2Gi
-    #   imagePullPolicy: Always
-    #   env:
-    #   - name: POD_IP
-    #     valueFrom:
-    #       fieldRef:
-    #         fieldPath: status.podIP
-    #   - name: DOCKER_HOST
-    #     value: tcp://localhost:2375
-    - name: dind
-      image: docker:18.05-dind
-      securityContext:
-        privileged: true
-      volumeMounts:
-        - name: dind-storage
-          mountPath: /var/lib/docker
-  volumes:
-    - name: dind-storage
-      emptyDir: {}
----
-  """
-    }
-  }
+agent any
 
 stages {
-    // stage('Cloning Git') {
-    //   steps {
-    //     git 'https://github.com/macleanj/hello-world.git'
-    //   }
-    // }
-    stage('Building image') {
-      steps{
-        script {
-          dockerImage = docker.build("${registry}:${BUILD_NUMBER}", "-f ${dockerFile} .")
-          // dockerImage = docker.build("${imagePath}:${buildTag}", "-f ${dockerFile} .")
-          // dockerImage = docker.build registry + ":$BUILD_NUMBER"
-        }
-      }
-    }
-    stage('Deploy Image') {
-      steps{
-        script {
-          docker.withRegistry( '', registryCredential ) {
-            dockerImage.push()
-          }
-        }
-      }
-    }
-    stage('Remove Unused docker image') {
-      steps{
-        sh "docker rmi $registry:$BUILD_NUMBER"
+    stage('Get environment variables') {
+      steps {
+LAST_GIT_BUILD_TAG=$(git tag | sort | egrep "^v-" | tail -1)
+LAST_GIT_DEPLOY_TAG=$(git tag | sort | egrep "^d-" | tail -1)
+
+echo "
+----- GIT ----- GIT ----- GIT ----- GIT ----- GIT -----
+GIT_COMMIT: $GIT_COMMIT
+GIT_BRANCH $GIT_BRANCH
+GIT_PREVIOUS_COMMIT $GIT_PREVIOUS_COMMIT
+GIT_PREVIOUS_SUCCESSFUL_COMMIT $GIT_PREVIOUS_SUCCESSFUL_COMMIT
+GIT_URL $GIT_URL
+GIT_AUTHOR_NAME $(git show -s --pretty=%an)
+GIT_COMMITTER_EMAIL $GIT_COMMITTER_EMAIL
+
+LAST_GIT_BUILD_TAG: $LAST_GIT_BUILD_TAG
+LAST_GIT_BUILD_TAG_COMMIT: $(git rev-list -1 $LAST_GIT_BUILD_TAG)
+LAST_GIT_DEPLOY_TAG: $LAST_GIT_DEPLOY_TAG
+LAST_GIT_DEPLOY_TAG_COMMIT: $(git rev-list -1 $LAST_GIT_DEPLOY_TAG)
+" 2>&1 >/dev/null
       }
     }
   }

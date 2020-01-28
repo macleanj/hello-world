@@ -17,7 +17,7 @@
 	<div class=cicd_config>
 		<?php
 		$cicd_config = [];
-		$cicd_config_def_vars = explode(" ", exec('egrep ".*=.*" config/*.conf | sed -e "s/.*:\(.*\)=.*/\1/g" | sort | uniq | tr "\r\n" " "'));
+		$cicd_config_def_vars = explode(" ", exec('egrep ".*=.*" /config/*.conf | sed -e "s/.*:\(.*\)=.*/\1/g" | sort | uniq | tr "\r\n" " "'));
 		
 		// print_r($cicd_config_def_vars);
 		// print_r($_ENV);

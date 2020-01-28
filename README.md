@@ -8,3 +8,6 @@ The page can be views on port 80 and 443 (self signed certificate).
 
 # Persistence
 In some cases persistenceStorage needs to be tested in the cloud environment. The persistenceStorage section offers the capabilities to simply upload files to the server. The files will uploaded to the directory ```/data```. In turn, this directory can than be used to test persistenceStorage.
+
+# Loading config files
+The main page will load all configuration files at startup and display the configured variable. Mind to restart the containers when changing the configuration as PHP caches the configuration.
