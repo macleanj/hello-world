@@ -14,7 +14,7 @@ RUN mkdir -p /var/lib/apt/lists/partial && \
 
 USER 1001
 ADD app/www /app
-# ADD config /config
+ADD config /config
 ADD app/nginx.conf /opt/bitnami/nginx/conf/server_blocks/
 ADD app/php-fpm.conf /etc/php/7.0/fpm/
 ADD app/ssl/certs/* /opt/bitnami/nginx/conf/server_blocks/ssl/certs/
