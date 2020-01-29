@@ -11,8 +11,8 @@ services:
     # env_file order matters. The last one is leading
     env_file:
       - build/config/generic.conf
-      - build/config/branch_${BRANCH_TAG}.conf
-      - build/config/deploy_${DEPLOY_TAG}.conf
+      - build/config/branch_develop.conf
+      - build/config/deploy_dev.conf
     ports:
       - "80:8080"
       - "443:8443"
