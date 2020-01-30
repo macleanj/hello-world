@@ -7,7 +7,7 @@ programDir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 baseName=$(echo ${programName} | sed -e 's/.sh//g')
 envDir="env.files"
 tagFile=${envDir}/tag_env.conf
-debug=0
+debug=1
 
 source $programDir/generic.conf
 
@@ -31,7 +31,7 @@ for mapping in $CICD_TAGS_DEPLOY_ENV_MAPPING; do
 done
 
 # Verify typeKey tag character
-buildEnabled=1
+buildEnabled=0
 for currentTag in $(git tag --contains); do
   # Character extraction by expected format
   # - Build: $buildTagStartingWith<branchCharacter>-<version>. Example: vm-1.01

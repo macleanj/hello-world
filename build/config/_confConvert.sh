@@ -6,7 +6,7 @@ programName=$(basename $0)
 programDir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 baseName=$(echo ${programName} | sed -e 's/.sh//g')
 envDir="env.files"
-debug=1
+debug=0
 
 cd $programDir
 for file in ${envDir}/tag_env.conf $(ls *.conf); do
