@@ -5,24 +5,21 @@ now=$(date +%Y-%m-%d\ %H:%M:%S)
 programName=$(basename $0)
 programDir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 baseName=$(echo ${programName} | sed -e 's/.sh//g')
+envDir="env.files"
 debug=0
-gitBranchNameDev=$(grep GIT_BRANCH_NAME_DEVELOP generic.conf | sed -e 's/.*=//g' | sed -e 's/[#].*//g' | sed -e 's/"//g' | awk '{$1=$1};1')
 
 cd $programDir
-rm -rf env.files
-mkdir -p env.files
-for file in $(ls *.conf); do
+for file in ${envDir}/tag_env.conf $(ls *.conf); do
   [ $debug -eq 1 ] && echo "Processing $file"
 
   # Get basename of the file
-  baseNameFile=$(echo ${file} | sed -e 's/.conf//g')
+  baseNameFile=$(echo ${file} | sed -e 's/.*\///g' | sed -e 's/.conf//g')
   
   # Prepare file(s) for environment variable format
-  [[ $baseNameFile =~ _$ ]] && baseNameFile="${baseNameFile}${gitBranchNameDev}"
-  echo -n > env.files/${baseNameFile}.env
+  echo -n > ${envDir}/${baseNameFile}.env
 
   # Prepare file(s) for groovy format
-  echo -n > env.files/${baseNameFile}.groovy
+  echo -n > ${envDir}/${baseNameFile}.groovy
 
   # Convert
   OLDIFS=$IFS
@@ -34,10 +31,10 @@ for file in $(ls *.conf); do
     [[ ! $value =~ ^\" ]] && value="\"$value\""
 
     # Environment variable format
-    echo "$key=$value" >> env.files/${baseNameFile}.env
+    echo "$key=$value" >> ${envDir}/${baseNameFile}.env
 
     # Environment groovy format
-    echo "env.$key=$value" >> env.files/${baseNameFile}.groovy
+    echo "env.$key=$value" >> ${envDir}/${baseNameFile}.groovy
 
   done
   IFS=$OLDIFS
