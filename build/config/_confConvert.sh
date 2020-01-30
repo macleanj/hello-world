@@ -6,7 +6,7 @@ programName=$(basename $0)
 programDir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 baseName=$(echo ${programName} | sed -e 's/.sh//g')
 envDir="env.files"
-debug=0
+debug=1
 
 cd $programDir
 for file in ${envDir}/tag_env.conf $(ls *.conf); do
@@ -25,9 +25,12 @@ for file in ${envDir}/tag_env.conf $(ls *.conf); do
   OLDIFS=$IFS
   IFS=$'\n'
   for env in $(cat $file | egrep -v "^#|^[[:space:]]"); do
-    [ $debug -eq 1 ] && echo $env
-    key=$(echo $env | sed -e 's/=.*//g' | awk '{$1=$1};1')
-    value=$(echo $env | sed -e 's/.*=//g' | sed -e 's/[#].*//g' | awk '{$1=$1};1')
+    [ $debug -eq 1 ] && echo "RAW  : $env"
+    key=$(echo $env | awk -F "=" '{print $1}' | awk '{$1=$1};1')
+    value=$(echo $env | sed -e 's/^[-_a-zA-Z0-9]*=//g' | sed -e 's/[#].*//g' | awk '{$1=$1};1')
+    [ $debug -eq 1 ] && echo "SPLIT: $key=$value"
+
+    # Quote value in case not quoted
     [[ ! $value =~ ^\" ]] && value="\"$value\""
 
     # Environment variable format
