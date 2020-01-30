@@ -9,6 +9,12 @@ envDir="env.files"
 debug=0
 
 cd $programDir
+rm -rf ${envDir}
+mkdir -p ${envDir}
+
+# Execute tag creation first
+$programDir/_prepTagEnvConvert.sh
+
 for file in ${envDir}/tag_env.conf $(ls *.conf); do
   [ $debug -eq 1 ] && echo "Processing $file"
 

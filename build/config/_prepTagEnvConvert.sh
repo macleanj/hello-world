@@ -10,9 +10,6 @@ tagFile=${envDir}/tag_env.conf
 debug=1
 
 source $programDir/generic.conf
-cd $programDir
-rm -rf ${envDir}
-mkdir -p ${envDir}
 
 buildTagStartingWith=$CICD_TAGS_BUILD_TAG
 deployTagStartingWith=$CICD_TAGS_DEPLOY_TAG
