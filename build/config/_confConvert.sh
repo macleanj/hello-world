@@ -13,7 +13,8 @@ rm -rf ${envDir}
 mkdir -p ${envDir}
 
 # Execute tag creation first
-$programDir/_prepTagEnvConvert.sh
+CICD_TAGS_NAME=$1
+$programDir/_prepTagEnvConvert.sh $CICD_TAGS_NAME
 
 for file in ${envDir}/tag_env.conf $(ls *.conf); do
   [ $debug -eq 1 ] && echo "Processing $file"

@@ -7,9 +7,10 @@ programDir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 baseName=$(echo ${programName} | sed -e 's/.sh//g')
 envDir="env.files"
 tagFile=${envDir}/tag_env.conf
-debug=1
+debug=0
 
 source $programDir/generic.conf
+CICD_TAGS_NAME=$1
 
 buildTagStartingWith=$CICD_TAGS_BUILD_TAG
 deployTagStartingWith=$CICD_TAGS_DEPLOY_TAG
@@ -31,8 +32,13 @@ for mapping in $CICD_TAGS_DEPLOY_ENV_MAPPING; do
 done
 
 # Verify typeKey tag character
-buildEnabled=1
-for currentTag in $(git tag --contains); do
+if [[ "$CICD_TAGS_NAME" == "" ]] && [[ "$CICD_TAGS_NAME" == "None" ]]; then
+  # Not a tag
+  buildEnabled=0
+else
+  # This is a tag
+  buildEnabled=1
+  currentTag=$CICD_TAGS_NAME
   # Character extraction by expected format
   # - Build: $buildTagStartingWith<branchCharacter>-<version>. Example: vm-1.01
   # - Deploy: $deployTagStartingWith<branchCharacter>-<deployEnvironment>-<version>. Example: ds-1.01
@@ -62,16 +68,16 @@ for currentTag in $(git tag --contains); do
   if [[ $buildEnabled == 1 ]]; then
     if [[ "$typeKey" == "${buildTagStartingWith}" ]]; then
       # Build tag received
-      CICD_TAG_BUILD_BRANCH=${mapTag2Branch[$branchKey]}
-      CICD_TAG_BUILD_VERSION=${trackingNumber}
+      CICD_TAGS_BUILD_BRANCH=${mapTag2Branch[$branchKey]}
+      CICD_TAGS_BUILD_VERSION=${trackingNumber}
 
       # Build tag format
       [[ ! $currentTag =~ [a-z]+-[0-9.]+ ]] && buildEnabled=0
     elif [[ "$typeKey" == "${deployTagStartingWith}" ]]; then
       # Deploy tag received
-      CICD_TAG_DEPLOY_BRANCH=${mapTag2Branch[$branchKey]}
-      CICD_TAG_DEPLOY_ENVIRONMENT=${mapTag2Environment[${envKey}]}
-      CICD_TAG_DEPLOY_RELEASE=${trackingNumber}
+      CICD_TAGS_DEPLOY_BRANCH=${mapTag2Branch[$branchKey]}
+      CICD_TAGS_DEPLOY_ENVIRONMENT=${mapTag2Environment[${envKey}]}
+      CICD_TAGS_DEPLOY_RELEASE=${trackingNumber}
 
       # Deploy tag format
       [[ ! $currentTag =~ [a-z]+-[a-z]+-[0-9.]+ ]] && buildEnabled=0
@@ -84,14 +90,14 @@ for currentTag in $(git tag --contains); do
 
   # [[ ! $currentTag =~ ^[a-z]${buildTagStartingWith} && ! $currentTag =~ ^${deployTagStartingWith} ]] && buildEnabled=0
   [ $debug -eq 1 ] && echo -e "Enabled: $buildEnabled\n"
-done
+fi
 [ $debug -eq 1 ] && echo "------------------------------------------------------------------------------------------"
-[ $debug -eq 1 ] && echo "CICD_TAG_BUILD_BRANCH: $CICD_TAG_BUILD_BRANCH"
-[ $debug -eq 1 ] && echo "CICD_TAG_BUILD_VERSION: $CICD_TAG_BUILD_VERSION"
+[ $debug -eq 1 ] && echo "CICD_TAGS_BUILD_BRANCH: $CICD_TAGS_BUILD_BRANCH"
+[ $debug -eq 1 ] && echo "CICD_TAGS_BUILD_VERSION: $CICD_TAGS_BUILD_VERSION"
 [ $debug -eq 1 ] && echo "------------------------------------------------------------------------------------------"
-[ $debug -eq 1 ] && echo "CICD_TAG_DEPLOY_BRANCH: $CICD_TAG_DEPLOY_BRANCH"
-[ $debug -eq 1 ] && echo "CICD_TAG_DEPLOY_ENVIRONMENT: $CICD_TAG_DEPLOY_ENVIRONMENT"
-[ $debug -eq 1 ] && echo "CICD_TAG_DEPLOY_RELEASE: $CICD_TAG_DEPLOY_RELEASE"
+[ $debug -eq 1 ] && echo "CICD_TAGS_DEPLOY_BRANCH: $CICD_TAGS_DEPLOY_BRANCH"
+[ $debug -eq 1 ] && echo "CICD_TAGS_DEPLOY_ENVIRONMENT: $CICD_TAGS_DEPLOY_ENVIRONMENT"
+[ $debug -eq 1 ] && echo "CICD_TAGS_DEPLOY_RELEASE: $CICD_TAGS_DEPLOY_RELEASE"
 [ $debug -eq 1 ] && echo "------------------------------------------------------------------------------------------"
 [ $debug -eq 1 ] && echo "Build enabled: $buildEnabled"
 
@@ -100,17 +106,17 @@ if [[ $buildEnabled == 1 ]]; then
   if [[ "$typeKey" == "${buildTagStartingWith}" ]]; then
     # Build tag received
 cat >> ${tagFile} <<EOL
-CICD_TAG_TYPE="Build"
-CICD_TAG_BRANCH="$CICD_TAG_BUILD_BRANCH"
-CICD_TAG_ID="$CICD_TAG_BUILD_VERSION"
+CICD_TAGS_TYPE="Build"
+CICD_TAGS_BRANCH="$CICD_TAGS_BUILD_BRANCH"
+CICD_TAGS_ID="$CICD_TAGS_BUILD_VERSION"
 EOL
   elif [[ "$typeKey" == "${deployTagStartingWith}" ]]; then
     # Build tag received
 cat >> ${tagFile} <<EOL
-CICD_TAG_TYPE="Deployment"
-CICD_TAG_BRANCH="$CICD_TAG_DEPLOY_BRANCH"
-CICD_TAG_DEPLOY_ENVIRONMENT="$CICD_TAG_DEPLOY_ENVIRONMENT"
-CICD_TAG_ID="$CICD_TAG_DEPLOY_RELEASE"
+CICD_TAGS_TYPE="Deployment"
+CICD_TAGS_BRANCH="$CICD_TAGS_DEPLOY_BRANCH"
+CICD_TAGS_DEPLOY_ENVIRONMENT="$CICD_TAGS_DEPLOY_ENVIRONMENT"
+CICD_TAGS_ID="$CICD_TAGS_DEPLOY_RELEASE"
 EOL
   fi
 
