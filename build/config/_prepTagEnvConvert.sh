@@ -108,15 +108,23 @@ if [[ $buildEnabled == 1 ]]; then
 cat >> ${tagFile} <<EOL
 CICD_TAGS_TYPE="Build"
 CICD_TAGS_BRANCH="$CICD_TAGS_BUILD_BRANCH"
+CICD_TAGS_DEPLOY_ENVIRONMENT="None"
 CICD_TAGS_ID="$CICD_TAGS_BUILD_VERSION"
 EOL
   elif [[ "$typeKey" == "${deployTagStartingWith}" ]]; then
-    # Build tag received
+    # Deploy tag received
 cat >> ${tagFile} <<EOL
 CICD_TAGS_TYPE="Deployment"
 CICD_TAGS_BRANCH="$CICD_TAGS_DEPLOY_BRANCH"
 CICD_TAGS_DEPLOY_ENVIRONMENT="$CICD_TAGS_DEPLOY_ENVIRONMENT"
 CICD_TAGS_ID="$CICD_TAGS_DEPLOY_RELEASE"
+EOL
+  else
+cat >> ${tagFile} <<EOL
+CICD_TAGS_TYPE="Branch"
+CICD_TAGS_BRANCH="None"
+CICD_TAGS_DEPLOY_ENVIRONMENT="None"
+CICD_TAGS_ID="None"
 EOL
   fi
 
