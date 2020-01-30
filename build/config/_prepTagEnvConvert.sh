@@ -10,9 +10,12 @@ tagFile=${envDir}/tag_env.conf
 debug=1
 
 source $programDir/generic.conf
+cd $programDir
+rm -rf ${envDir}
+mkdir -p ${envDir}
 
-buildTagStartingWith="v"
-deployTagStartingWith="d"
+buildTagStartingWith=$CICD_TAGS_BUILD_TAG
+deployTagStartingWith=$CICD_TAGS_DEPLOY_TAG
 
 declare -A mapTag2Branch
 for mapping in $CICD_TAGS_BRANCH_MAPPING; do
@@ -31,7 +34,7 @@ for mapping in $CICD_TAGS_DEPLOY_ENV_MAPPING; do
 done
 
 # Verify typeKey tag character
-buildEnabled=0
+buildEnabled=1
 for currentTag in $(git tag --contains); do
   # Character extraction by expected format
   # - Build: $buildTagStartingWith<branchCharacter>-<version>. Example: vm-1.01
