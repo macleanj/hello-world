@@ -103,27 +103,33 @@ echo "CICD_BUILD_ENABLED=\"$buildEnabled\"" > ${tagFile}
 if [[ $buildEnabled == 1 ]]; then
   if [[ "$tagTypeKey" == "${buildTagType}" ]]; then
     # Build tag received
-cat >> ${tagFile} <<EOL
+    cat >> ${tagFile} <<EOL
 CICD_TAGS_TAG_TYPE="build"
 CICD_TAGS_IMAGE_TYPE="$CICD_TAGS_BUILD_IMAGE_TYPE"
 CICD_TAGS_DEPLOY_ENVIRONMENT="$CICD_TAGS_BUILD_ENV"
 CICD_TAGS_ID="$CICD_TAGS_BUILD_VERSION"
+CICD_DEPLOY_ENABLED="0"
 EOL
   elif [[ "$tagTypeKey" == "${deployTagType}" ]]; then
     # Deploy tag received
-cat >> ${tagFile} <<EOL
+    cat >> ${tagFile} <<EOL
 CICD_TAGS_TAG_TYPE="deployment"
 CICD_TAGS_IMAGE_TYPE="$CICD_TAGS_DEPLOY_IMAGE_TYPE"
 CICD_TAGS_DEPLOY_ENVIRONMENT="$CICD_TAGS_DEPLOY_ENVIRONMENT"
 CICD_TAGS_ID="$CICD_TAGS_DEPLOY_VERSION"
+CICD_DEPLOY_ENABLED="1"
 EOL
   else
-cat >> ${tagFile} <<EOL
+    cat >> ${tagFile} <<EOL
 CICD_TAGS_TAG_TYPE="Other"
 CICD_TAGS_IMAGE_TYPE="none""
 CICD_TAGS_DEPLOY_ENVIRONMENT="None"
 CICD_TAGS_ID="None"
+CICD_DEPLOY_ENABLED="0"
 EOL
   fi
-
+else
+  cat >> ${tagFile} <<EOL
+CICD_DEPLOY_ENABLED="0"
+EOL
 fi
