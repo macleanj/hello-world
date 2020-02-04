@@ -11,7 +11,7 @@ debug=0
 
 source $programDir/generic.conf
 CICD_TAGS_NAME=$1
-[ -z $GIT_COMMIT_SHORT ] && imageHash="DummyHash1345fa4f3546a3" || imageHash=$GIT_COMMIT_SHORT
+[[ -z $GIT_COMMIT_SHORT ]] && imageHash="DummyHash1345fa4f3546a3" || imageHash=$GIT_COMMIT_SHORT
 
 buildTagType=$CICD_TAGS_BUILD_TAG
 deployTagType=$CICD_TAGS_DEPLOY_TAG
