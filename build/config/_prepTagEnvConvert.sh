@@ -7,10 +7,11 @@ programDir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 baseName=$(echo ${programName} | sed -e 's/.sh//g')
 envDir="env.files"
 tagFile=${envDir}/tag_env.conf
-debug=0
+debug=1
 
 source $programDir/generic.conf
 CICD_TAGS_NAME=$1
+GIT_COMMIT_SHORT=$2
 [[ -z $GIT_COMMIT_SHORT ]] && imageHash="DummyHash1345fa4f3546a3" || imageHash=$GIT_COMMIT_SHORT
 
 buildTagType=$CICD_TAGS_BUILD_TAG
