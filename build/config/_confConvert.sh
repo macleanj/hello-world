@@ -14,7 +14,8 @@ mkdir -p ${envDir}
 
 # Execute tag creation first
 CICD_TAGS_NAME=$1
-$programDir/_prepTagEnvConvert.sh $CICD_TAGS_NAME
+GIT_COMMIT_SHORT=$2
+$programDir/_prepTagEnvConvert.sh $CICD_TAGS_NAME $GIT_COMMIT_SHORT
 
 for file in ${envDir}/tag_env.conf $(ls *.conf); do
   [ $debug -eq 1 ] && echo "Processing $file"
