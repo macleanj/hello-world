@@ -9,7 +9,7 @@ spec:
   serviceAccountName: jenkins
   containers:
     - name: jnlp
-      image: jenkinsci/jnlp-slave:3.40-1
+      image: jenkins/jnlp-slave:3.40-1
       resources:
         limits:
           cpu: 1
