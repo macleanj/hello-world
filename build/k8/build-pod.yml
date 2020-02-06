@@ -9,14 +9,15 @@ spec:
   serviceAccountName: jenkins
   containers:
     - name: jnlp
-      image: jenkinsci/jnlp-slave:3.40-1
-      resources:
-        limits:
-          cpu: 1
-          memory: 2Gi
-        requests:
-          cpu: 0.5
-          memory: 1Gi
+      # image: jenkins/jnlp-slave:3.40-1
+      image: jenkins/jnlp-slave
+      # resources:
+      #   limits:
+      #     cpu: 1
+      #     memory: 2Gi
+      #   requests:
+      #     cpu: 0.5
+      #     memory: 1Gi
       env:
       - name: POD_IP
         valueFrom:
