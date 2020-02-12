@@ -29,7 +29,7 @@ pipeline {
     CICD_TAGS_NAME = "${TAG_NAME ? TAG_NAME : 'None'}"
 
     // GIT environment variables
-    GIT_COMMIT_SHORT = sh(returnStdout: true, script: 'git rev-parse HEAD').trim().take(7)
+    GIT_COMMIT_SHORT = sh(returnStdout: true, script: 'git rev-parse HEAD').trim().take(8)
     GIT_AUTHOR_NAME = sh(returnStdout: true, script: 'git show -s --pretty=%an').trim()
 
     // Jenkins environment variables
@@ -51,7 +51,7 @@ pipeline {
       cloud 'kubernetes'
       defaultContainer 'jnlp'
       instanceCap 1
-      yamlFile "build/k8/build-pod.yml"
+      yamlFile "build/k8/build-pod-dind.yml"
     }
   }
 

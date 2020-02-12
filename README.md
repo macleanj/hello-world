@@ -11,3 +11,6 @@ In some cases persistenceStorage needs to be tested in the cloud environment. Th
 
 # Loading config files
 The main page will load all configuration files at startup and display the configured variable. Mind to restart the containers when changing the configuration as PHP caches the configuration.
+
+# References
+- [DinD vd DooD](https://medium.com/hootsuite-engineering/building-docker-images-inside-kubernetes-42c6af855f25)
