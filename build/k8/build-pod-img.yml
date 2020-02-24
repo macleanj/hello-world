@@ -1,13 +1,13 @@
 kind: Pod
 metadata:
-  name: jenkins-builder
+  name: jnlp
   annotations:
-    container.apparmor.security.beta.kubernetes.io/jenkins-builder: unconfined
-    # container.seccomp.security.alpha.kubernetes.io/jenkins-builder: unconfined
+    container.apparmor.security.beta.kubernetes.io/jnlp: unconfined
+    # container.seccomp.security.alpha.kubernetes.io/jnlp: unconfined
 spec:
   serviceAccountName: jenkins
   containers:
-  - name: jenkins-builder
+  - name: jnlp
     workingDir: /home/jenkins/agent
     image: r.j3ss.co/img:v0.5.6
     imagePullPolicy: IfNotPresent
@@ -24,25 +24,25 @@ spec:
     command:
     - cat
     tty: true
-  - name: hello-world
-    workingDir: /home/jenkins/agent
-    image: jmaclean/hello-world:v5
-    imagePullPolicy: IfNotPresent
-    resources:
-      requests:
-        memory: "64Mi"
-        cpu: "250m"
-      limits:
-        memory: "128Mi"
-        cpu: "500m"
-    command:
-    - cat
-    tty: true
-    volumeMounts:
-      - name: app
-        mountPath: /app
+  # - name: hello-world
+  #   workingDir: /home/jenkins/agent
+  #   image: jmaclean/hello-world:v5
+  #   imagePullPolicy: IfNotPresent
+  #   resources:
+  #     requests:
+  #       memory: "64Mi"
+  #       cpu: "250m"
+  #     limits:
+  #       memory: "128Mi"
+  #       cpu: "500m"
+  #   command:
+  #   - cat
+  #   tty: true
+  #   volumeMounts:
+  #     - name: app
+  #       mountPath: /app
 
-    volumes:
-    - name: app
-      emptyDir: ./build/app/www
+  #   volumes:
+  #   - name: app
+  #     emptyDir: ./build/app/www
     
