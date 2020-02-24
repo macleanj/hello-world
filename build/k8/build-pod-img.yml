@@ -9,7 +9,7 @@ spec:
   - name: img
     workingDir: /home/jenkins
     image: r.j3ss.co/img:0.5.6
-    imagePullPolicy: Never
+    imagePullPolicy: IfNotPresent
     # securityContext:
     #     rawProc: true
     #     privileged: true
