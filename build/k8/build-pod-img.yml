@@ -8,7 +8,7 @@ spec:
   containers:
   - name: img
     workingDir: /home/jenkins
-    image: r.j3ss.co/img:0.5.6
+    image: r.j3ss.co/img:v0.5.6
     imagePullPolicy: IfNotPresent
     # securityContext:
     #     rawProc: true
