@@ -1,3 +1,4 @@
+# Docker image is complete configured and build from within the podTemplate
 kind: Pod
 metadata:
   name: jnlp

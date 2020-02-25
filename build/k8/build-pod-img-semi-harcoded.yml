@@ -1,3 +1,6 @@
+# Docker image is pulled/configured from within the podTemplate
+# Docker image build is triggered from the Jenkins file with:
+# sh 'img build -t irssi irssi/'
 kind: Pod
 metadata:
   name: jnlp
