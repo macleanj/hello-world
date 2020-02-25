@@ -10,7 +10,7 @@ spec:
   # serviceAccountName: jenkins
   containers:
   - name: jnlp
-    image: jenkins/jnlp-slave:3.40-1
+    image: jjenkins/jnlp-slave:3.40-1
     # image: jenkins/jnlp-slave:4.0.1-1
     # resources:
     #   limits:
@@ -31,7 +31,8 @@ spec:
         memory: "128Mi"
         cpu: "500m"
     securityContext:
-        rawProc: true
+      runAsUser: 1000
+      rawProc: true
     #     privileged: true
     command:
     - cat
