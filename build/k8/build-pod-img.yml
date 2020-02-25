@@ -37,9 +37,9 @@ spec:
     - cat
     tty: true 
     volumeMounts:
-      - name: cache-volume
+      - name: build-cache
         mountPath: /tmp
   volumes:
-  - name: cache-volume
+  - name: build-cache
     emptyDir: {}
   # restartPolicy: Never
