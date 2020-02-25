@@ -20,8 +20,8 @@ spec:
     #     cpu: 0.5
     #     memory: 1Gi
   - name: jenkins-builder
-    # workingDir: /repo # Repo needs to be put it in the volume in the job
-    workingDir: /home/jenkins/agent
+    workingDir: /build-volume # Repo needs to be copied into the volume in the job
+    # workingDir: /home/jenkins/agent
     image: r.j3ss.co/img:v0.5.6
     imagePullPolicy: Always
     resources:
@@ -42,7 +42,7 @@ spec:
       - name: cache-volume
         mountPath: /tmp
       - name: git-repo
-        mountPath: /home/jenkins/agent
+        mountPath: /build-volume
   volumes:
   - name: cache-volume
     emptyDir: {}
