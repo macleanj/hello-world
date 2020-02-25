@@ -51,14 +51,14 @@ spec:
       limits:
         memory: "128Mi"
         cpu: "500m"
-      command:
-        - img
-        - build
-        - -f
-        - Dockerfile.test
-        - -t
-        - jmaclean/tessie
-        - .
+    command:
+      - img
+      - build
+      - -f
+      - Dockerfile.test
+      - -t
+      - jmaclean/tessie
+      - .
       
     # command:
     # - cat
