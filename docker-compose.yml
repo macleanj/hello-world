@@ -5,7 +5,7 @@ services:
     hostname: hello-world
     container_name: hello-world
     build:
-      context: ./build
+      context: .
       dockerfile: Dockerfile
     image: jmaclean/hello-world:v5
     # env_file order matters. The last one is leading
@@ -18,4 +18,4 @@ services:
     volumes: 
       - ./build/app/www:/app
       - ./build/app/data:/data # For fast development
-      - ./build/config:/config
+      # - ./config:/config
