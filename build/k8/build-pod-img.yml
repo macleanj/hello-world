@@ -3,7 +3,7 @@ metadata:
   name: jnlp
   annotations:
     container.apparmor.security.beta.kubernetes.io/jenkins-builder: unconfined
-    # container.seccomp.security.alpha.kubernetes.io/jenkins-builder: unconfined
+    container.seccomp.security.alpha.kubernetes.io/jenkins-builder: unconfined
 spec:
   # serviceAccountName: jenkins
   containers:
