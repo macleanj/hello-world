@@ -12,7 +12,7 @@ spec:
     - name: volume-permissions
       image: busybox
       securityContext:
-        runAsUser: 1000    
+        # runAsUser: 1000    
         allowPrivilegeEscalation: false
         readOnlyRootFilesystem: true
       command: ['sh', '-c', 'chmod -R g+rwX /home']
