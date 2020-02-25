@@ -15,11 +15,11 @@ spec:
         # runAsUser: 1000    
         allowPrivilegeEscalation: false
         readOnlyRootFilesystem: true
-      command: ['sh', '-c', 'chmod -R g+rwX /home']
+      command: ['sh', '-c', 'chmod -R g+rwX /home/jenkins/agent']
+      # Default volumeMounts for agents
       volumeMounts:
-      - mountPath: /home/
-        name: jenkins-workspace
-        subPath: "jenkins/agent"
+      - mountPath: /home/jenkins/agent
+        name: workspace-volume
   containers:
   - name: jnlp
     image: jenkins/jnlp-slave:3.40-1
@@ -52,14 +52,3 @@ spec:
     command:
     - cat
     tty: true 
-    volumeMounts:
-      - name: cache-volume
-        mountPath: /tmp
-      - name: jenkins-workspace
-        mountPath: /home # Repo needs to be copied into the volume in the job
-        subPath: "jenkins/agent"
-  volumes:
-  - name: cache-volume
-    emptyDir: {}
-  - name: jenkins-workspace
-    emptyDir: {}
