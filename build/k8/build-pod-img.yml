@@ -33,9 +33,9 @@ spec:
     securityContext:
         rawProc: true
     #     privileged: true
-    # command:
-    # - cat
-    # tty: true 
+    command:
+    - cat
+    tty: true 
     volumeMounts:
       - name: cache-volume
         mountPath: /tmp
