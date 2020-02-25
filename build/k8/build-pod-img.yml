@@ -2,12 +2,12 @@ kind: Pod
 metadata:
   name: jnlp
   annotations:
-    container.apparmor.security.beta.kubernetes.io/jnlp: unconfined
-    # container.seccomp.security.alpha.kubernetes.io/jnlp: unconfined
+    container.apparmor.security.beta.kubernetes.io/jenkins-builder: unconfined
+    # container.seccomp.security.alpha.kubernetes.io/jenkins-builder: unconfined
 spec:
   serviceAccountName: jenkins
   containers:
-  - name: jnlp
+  - name: jenkins-builder
     workingDir: /home/jenkins/agent
     image: r.j3ss.co/img:v0.5.6
     imagePullPolicy: IfNotPresent
