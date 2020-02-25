@@ -39,9 +39,11 @@ spec:
     securityContext:
       runAsUser: 1000
       rawProc: true
+
     #   allowPrivilegeEscalation: false
     #   readOnlyRootFilesystem: true
     #   privileged: true
+    
     resources:
       requests:
         memory: "64Mi"
@@ -49,6 +51,15 @@ spec:
       limits:
         memory: "128Mi"
         cpu: "500m"
-    command:
-    - cat
-    tty: true 
+      command:
+        - img
+        - build
+        - -f
+        - Dockerfile.test
+        - -t
+        - jmaclean/tessie
+        - .
+      
+    # command:
+    # - cat
+    # tty: true 
