@@ -20,10 +20,16 @@ spec:
     #     cpu: 0.5
     #     memory: 1Gi
   - name: jenkins-builder
-    workingDir: /build-volume # Repo needs to be copied into the volume in the job
-    # workingDir: /home/jenkins/agent
+    # workingDir: /build-volume # Repo needs to be copied into the volume in the job
+    workingDir: /home/jenkins/agent
     image: r.j3ss.co/img:v0.5.6
     imagePullPolicy: Always
+    securityContext:
+      runAsUser: 1000
+      rawProc: true
+      allowPrivilegeEscalation: false
+      readOnlyRootFilesystem: true
+    #     privileged: true
     resources:
       requests:
         memory: "64Mi"
@@ -31,10 +37,6 @@ spec:
       limits:
         memory: "128Mi"
         cpu: "500m"
-    securityContext:
-      runAsUser: 1000
-      rawProc: true
-    #     privileged: true
     command:
     - cat
     tty: true 
@@ -42,7 +44,7 @@ spec:
       - name: cache-volume
         mountPath: /tmp
       - name: git-repo
-        mountPath: /build-volume
+        mountPath: /build-volume # Repo needs to be copied into the volume in the job
   volumes:
   - name: cache-volume
     emptyDir: {}
