@@ -24,25 +24,14 @@ spec:
     command:
     - cat
     tty: true
-  # - name: hello-world
-  #   workingDir: /home/jenkins/agent
-  #   image: jmaclean/hello-world:v5
-  #   imagePullPolicy: IfNotPresent
-  #   resources:
-  #     requests:
-  #       memory: "64Mi"
-  #       cpu: "250m"
-  #     limits:
-  #       memory: "128Mi"
-  #       cpu: "500m"
-  #   command:
-  #   - cat
-  #   tty: true
-  #   volumeMounts:
-  #     - name: app
-  #       mountPath: /app
-
-  #   volumes:
-  #   - name: app
-  #     emptyDir: ./build/app/www
-    
+  - name: jnlp
+    # image: jenkins/jnlp-slave:3.40-1
+    image: jenkins/jnlp-slave:4.0.1-1
+    # resources:
+    #   limits:
+    #     cpu: 1
+    #     memory: 2Gi
+    #   requests:
+    #     cpu: 0.5
+    #     memory: 1Gi
+  
