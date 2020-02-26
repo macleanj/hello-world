@@ -7,19 +7,19 @@ metadata:
 spec:
   securityContext:
     runAsUser: 1000
-  initContainers:
-    - name: volume-permissions
-      image: busybox
-      imagePullPolicy: IfNotPresent
-      securityContext:
-        # runAsUser: 1000    
-        allowPrivilegeEscalation: false
-        readOnlyRootFilesystem: true
-      command: ['sh', '-c', 'chmod -R g+rwX /home/jenkins/agent']
-      # Default volumeMounts for agents
-      volumeMounts:
-      - mountPath: /home/jenkins/agent
-        name: workspace-volume
+  # initContainers:
+  #   - name: volume-permissions
+  #     image: busybox
+  #     imagePullPolicy: IfNotPresent
+  #     securityContext:
+  #       # runAsUser: 1000    
+  #       allowPrivilegeEscalation: false
+  #       readOnlyRootFilesystem: true
+  #     command: ['sh', '-c', 'chmod -R g+rwX /home/jenkins/agent']
+  #     # Default volumeMounts for agents
+  #     volumeMounts:
+  #     - mountPath: /home/jenkins/agent
+  #       name: workspace-volume
   containers:
   - name: jnlp
     image: jenkins/jnlp-slave:3.40-1
