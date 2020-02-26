@@ -1,4 +1,8 @@
-# Docker image is complete configured and build from within the podTemplate
+# Testing only: Docker image is complete configured and build from within the podTemplate. No command needed in the Jenkinsfile
+# Status:
+# - Jenkins job execution: FAILURE -> Job never finished because setting "workingDir: /home/jenkins/agent" is not satisfied.
+# - Image creation: Successfully built docker.io/jmaclean/hello-world-test:latest -> Checked via: kubectl logs -c jenkins-builder jnlp-14lzh-kgz2m
+
 kind: Pod
 metadata:
   name: jnlp

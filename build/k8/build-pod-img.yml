@@ -5,12 +5,12 @@ metadata:
     container.apparmor.security.beta.kubernetes.io/jenkins-builder: unconfined
     # container.seccomp.security.alpha.kubernetes.io/jenkins-builder: unconfined
 spec:
-  # securityContext:
-  #   runAsUser: 1000
-  # serviceAccountName: jenkins
+  securityContext:
+    runAsUser: 1000
   initContainers:
     - name: volume-permissions
       image: busybox
+      imagePullPolicy: IfNotPresent
       securityContext:
         # runAsUser: 1000    
         allowPrivilegeEscalation: false
@@ -37,8 +37,9 @@ spec:
     # image: r.j3ss.co/img:v0.5.6
     image: r.j3ss.co/img
     # imagePullPolicy: Always
+    imagePullPolicy: IfNotPresent
     securityContext:
-      runAsUser: 1000
+      # runAsUser: 1000
       rawProc: true
 
     #   allowPrivilegeEscalation: false
@@ -52,15 +53,15 @@ spec:
       limits:
         memory: "128Mi"
         cpu: "500m"
-    command:
-      - img
-      - build
-      - -f
-      - Dockerfile.test
-      - -t
-      - jmaclean/tessie
-      - .
-      
     # command:
-    # - cat
-    # tty: true 
+    #   - img
+    #   - build
+    #   - -f
+    #   - Dockerfile.test
+    #   - -t
+    #   - jmaclean/tessie
+    #   - .
+      
+    command:
+    - cat
+    tty: true 
