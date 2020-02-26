@@ -16,7 +16,7 @@ spec:
         - clone
         - --single-branch
         - --branch
-        - --develop
+        - develop
         - https://github.com/macleanj/hello-world.git
         - /repo # Put it in the volume
       securityContext:
