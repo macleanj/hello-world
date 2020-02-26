@@ -34,8 +34,9 @@ spec:
   - name: jenkins-builder
     # workingDir: /home/jenkins/agent # Repo needs to be copied into the volume in the job
     workingDir: /home/jenkins/agent
-    image: r.j3ss.co/img:v0.5.6
-    imagePullPolicy: Always
+    # image: r.j3ss.co/img:v0.5.6
+    image: r.j3ss.co/img
+    # imagePullPolicy: Always
     securityContext:
       runAsUser: 1000
       rawProc: true
