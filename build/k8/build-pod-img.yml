@@ -21,8 +21,8 @@ spec:
     imagePullPolicy: Always
     # imagePullPolicy: IfNotPresent
     securityContext:
-      procMount: Unmasked
-      # runAsUser: 1000
+      # procMount: Unmasked
+      runAsUser: 1000
       rawProc: true
 
       # allowPrivilegeEscalation: false
