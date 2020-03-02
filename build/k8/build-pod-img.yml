@@ -11,6 +11,8 @@ spec:
   - name: jnlp
     # image: jenkins/jnlp-slave:3.40-1
     image: jmaclean/jenkins-jnlp-slave:3.40-1
+    imagePullPolicy: Always
+    # imagePullPolicy: IfNotPresent
     workingDir: /home/jenkins/agent
   - name: jenkins-builder
     workingDir: /home/jenkins/agent
