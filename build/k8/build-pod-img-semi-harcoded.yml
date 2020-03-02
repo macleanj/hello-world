@@ -29,10 +29,11 @@ spec:
           mountPath: /repo
   containers:
   - name: jnlp
-    image: jenkins/jnlp-slave:3.40-1
+    # image: jenkins/jnlp-slave:3.40-1
+    image: jmaclean/jenkins-builder:0.5.7
   - name: jenkins-builder
     # image: r.j3ss.co/img:v0.5.7
-    image: jmaclean/jenkins-builder:0.5.7
+    image: jmaclean/jenkins-jnlp-slave:3.40-1
     imagePullPolicy: Always    
     resources: {}
     workingDir: /repo
