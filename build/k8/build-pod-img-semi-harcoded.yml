@@ -30,9 +30,10 @@ spec:
   containers:
   - name: jnlp
     image: jenkins/jnlp-slave:3.40-1
-  - image: r.j3ss.co/img
-    imagePullPolicy: Always
-    name: jenkins-builder
+  - name: jenkins-builder
+    # image: r.j3ss.co/img:v0.5.7
+    image: jmaclean/jenkins-builder:0.5.7
+    imagePullPolicy: Always    
     resources: {}
     workingDir: /repo
     command:
