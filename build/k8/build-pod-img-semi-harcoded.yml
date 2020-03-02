@@ -8,7 +8,8 @@ metadata:
     container.apparmor.security.beta.kubernetes.io/jenkins-builder: unconfined
 spec:
   securityContext:
-    runAsUser: 1000
+    # runAsUser: 1000 # Kubernetes
+    serviceAccountName: jenkins # OpenShift
   initContainers:
     # This container clones the desired git repo to the EmptyDir volume.
     - name: git-clone
