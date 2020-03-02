@@ -22,7 +22,7 @@ spec:
     # imagePullPolicy: IfNotPresent
     securityContext:
       # procMount: Unmasked
-      runAsUser: 1002860000
+      runAsUser: 1002860099
       # runAsUser: 1000
       rawProc: true
 
