@@ -46,8 +46,8 @@ spec:
       # runAsUser: 1000
       rawProc: true
 
-    #   allowPrivilegeEscalation: false
-    #   readOnlyRootFilesystem: true
+      allowPrivilegeEscalation: false
+      readOnlyRootFilesystem: true
     #   privileged: true
     
     resources:
