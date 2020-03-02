@@ -9,7 +9,7 @@ spec:
   securityContext:
     serviceAccountName: jenkins
     # runAsUser: 1002860099
-    runAsUser: 1000
+    # runAsUser: 1000
   # initContainers:
   #   - name: volume-permissions
   #     image: busybox
