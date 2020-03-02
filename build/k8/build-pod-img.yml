@@ -20,9 +20,6 @@ spec:
     # imagePullPolicy: IfNotPresent
     securityContext:
       procMount: Unmasked
-      capabilities:
-        add:
-        - SYS_ADMIN
       # runAsUser: 1000
       rawProc: true
 
