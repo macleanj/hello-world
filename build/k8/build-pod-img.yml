@@ -5,7 +5,9 @@ metadata:
     container.apparmor.security.beta.kubernetes.io/jenkins-builder: unconfined
     # container.seccomp.security.alpha.kubernetes.io/jenkins-builder: unconfined
 spec:
+
   securityContext:
+    serviceAccountName: jenkins
     # runAsUser: 1002860099
     runAsUser: 1000
   # initContainers:
