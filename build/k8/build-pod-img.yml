@@ -3,51 +3,31 @@ metadata:
   name: jnlp
   annotations:
     container.apparmor.security.beta.kubernetes.io/jenkins-builder: unconfined
-    container.seccomp.security.alpha.kubernetes.io/jenkins-builder: unconfined
+    # container.seccomp.security.alpha.kubernetes.io/jenkins-builder: unconfined
 spec:
-
   securityContext:
     serviceAccountName: jenkins
-    # runAsUser: 1002860099
-    # runAsUser: 1000
-  # initContainers:
-  #   - name: volume-permissions
-  #     image: busybox
-  #     imagePullPolicy: IfNotPresent
-  #     securityContext:
-  #       # runAsUser: 1000    
-  #       allowPrivilegeEscalation: false
-  #       readOnlyRootFilesystem: true
-  #     command: ['sh', '-c', 'chmod -R g+rwX /home/jenkins/agent']
-  #     # Default volumeMounts for agents
-  #     volumeMounts:
-  #     - mountPath: /home/jenkins/agent
-  #       name: workspace-volume
   containers:
   - name: jnlp
-    image: jenkins/jnlp-slave:3.40-1
-    # image: jenkins/jnlp-slave:4.0.1-1
-    # resources:
-    #   limits:
-    #     cpu: 1
-    #     memory: 2Gi
-    #   requests:
-    #     cpu: 0.5
-    #     memory: 1Gi
-  - name: jenkins-builder
-    # workingDir: /home/jenkins/agent # Repo needs to be copied into the volume in the job
+    # image: jenkins/jnlp-slave:3.40-1
+    image: jmaclean/jenkins-jnlp-slave:3.40-1
     workingDir: /home/jenkins/agent
-    # image: r.j3ss.co/img:v0.5.6
-    # image: r.j3ss.co/img
+  - name: jenkins-builder
+    workingDir: /home/jenkins/agent
+    # image: r.j3ss.co/img:v0.5.7
     image: jmaclean/jenkins-builder:0.5.7
     imagePullPolicy: Always
     # imagePullPolicy: IfNotPresent
     securityContext:
+      procMount: Unmasked
+      capabilities:
+        add:
+        - SYS_ADMIN
       # runAsUser: 1000
       rawProc: true
 
-      allowPrivilegeEscalation: false
-      readOnlyRootFilesystem: true
+      # allowPrivilegeEscalation: false
+      # readOnlyRootFilesystem: true
     #   privileged: true
     
     resources:
@@ -57,15 +37,6 @@ spec:
       limits:
         memory: "128Mi"
         cpu: "500m"
-    # command:
-    #   - img
-    #   - build
-    #   - -f
-    #   - Dockerfile.test
-    #   - -t
-    #   - jmaclean/tessie
-    #   - .
-      
     command:
     - cat
     tty: true 
