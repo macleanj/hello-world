@@ -40,8 +40,8 @@ spec:
     # image: r.j3ss.co/img:v0.5.6
     # image: r.j3ss.co/img
     image: jmaclean/jenkins-builder:0.5.7
-    # imagePullPolicy: Always
-    imagePullPolicy: IfNotPresent
+    imagePullPolicy: Always
+    # imagePullPolicy: IfNotPresent
     securityContext:
       # runAsUser: 1000
       rawProc: true
