@@ -9,9 +9,8 @@ metadata:
   annotations:
     container.apparmor.security.beta.kubernetes.io/jenkins-builder: unconfined
 spec:
-  securityContext:
-    # runAsUser: 1000 # Kubernetes
-    serviceAccountName: jenkins # OpenShift
+  # securityContext:
+  #   serviceAccountName: jenkins # OpenShift
   initContainers:
     # This container clones the desired git repo to the EmptyDir volume.
     - name: git-clone
@@ -49,7 +48,8 @@ spec:
     - jmaclean/hello-world-test
     - .
     securityContext:
-      rawProc: true
+    runAsUser: 1000 # Kubernetes
+    rawProc: true
     volumeMounts:
     - name: cache-volume
       mountPath: /tmp
