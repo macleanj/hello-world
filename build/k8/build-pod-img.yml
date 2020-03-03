@@ -5,38 +5,22 @@ metadata:
     container.apparmor.security.beta.kubernetes.io/jenkins-builder: unconfined
     # container.seccomp.security.alpha.kubernetes.io/jenkins-builder: unconfined
 spec:
-  securityContext:
-    serviceAccountName: jenkins
+  # securityContext:
+  #   serviceAccountName: jenkins # OpenShift
   containers:
   - name: jnlp
-    # image: jenkins/jnlp-slave:3.40-1
     image: jmaclean/jenkins-jnlp-slave:3.40-1
-    imagePullPolicy: Always
-    # imagePullPolicy: IfNotPresent
+    imagePullPolicy: Always # Always / IfNotPresent
     workingDir: /home/jenkins/agent
-  - name: jenkins-builder
-    workingDir: /home/jenkins/agent
-    # image: r.j3ss.co/img:v0.5.7
-    image: jmaclean/jenkins-builder:0.5.7
-    imagePullPolicy: Always
-    # imagePullPolicy: IfNotPresent
     securityContext:
-      # procMount: Unmasked
-      runAsUser: 1002860099
-      # runAsUser: 1000
+      runAsUser: 1000 # Kubernetes
+  - name: jenkins-builder
+    image: jmaclean/jenkins-builder:0.5.7
+    imagePullPolicy: Always # Always / IfNotPresent
+    workingDir: /home/jenkins/agent
+    securityContext:
+      runAsUser: 1000 # Kubernetes
       rawProc: true
-
-      # allowPrivilegeEscalation: false
-      # readOnlyRootFilesystem: true
-    #   privileged: true
-    
-    resources:
-      requests:
-        memory: "64Mi"
-        cpu: "250m"
-      limits:
-        memory: "128Mi"
-        cpu: "500m"
     command:
     - cat
     tty: true 
