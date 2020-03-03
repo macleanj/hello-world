@@ -48,8 +48,8 @@ spec:
     - jmaclean/hello-world-test
     - .
     securityContext:
-    runAsUser: 1000 # Kubernetes
-    rawProc: true
+      runAsUser: 1000 # Kubernetes
+      rawProc: true
     volumeMounts:
     - name: cache-volume
       mountPath: /tmp
