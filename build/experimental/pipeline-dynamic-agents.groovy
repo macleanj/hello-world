@@ -20,10 +20,13 @@ jsl = library identifier: 'k8sagent@develop', retriever: modernSCM (
 // Environment instantiation
 def cicd = [build: [:], git: [:], jenkins: [:], config: [:], env: [:]]
 cicd.build.debug = 0
-cicd.build.throttle = 1
-cicd.build.agent = ""
+cicd.build.throttle = 100
+cicd.config.appName = "dynamic-agent"
+cicd.config.appLabel = cicd.config.appName.toLowerCase().replaceAll("[_]", "-")
+// cicd.build.agents = ""
 
 // The following variable are available start of the pipeline (before node {} and pipeline {})
+// This is both true for a pipeline script with a bare pipeline and a Jenkinsfile checked out from GIT in the beginning.
 // current dir = /
 if (cicd.build.debug == 1) { println "DEBUG: Bare Environment\n" + "env".execute().text }
 /*
@@ -54,11 +57,11 @@ node ('master') {
   stage('Set environment') {
     sh 'echo "master - Stage: Set environment"'
     if (cicd.build.debug == 1) { echo "DEBUG: CICD Environment\n" + sh(script: "printenv | sort", returnStdout: true) }
-    // cicd.build.agent = (BUILD_NUMBER.toInteger() <= cicd.build.throttle) ? k8sagent(name: 'base+s_micro', label: 'jnlp', cloud: 'kubernetes') : [cloud:'disabled', label:'disabled', timeout: 1]
-    cicd.build.agent = (BUILD_NUMBER.toInteger() <= cicd.build.throttle) ? k8sagent(name: 'base+s_micro', label: 'jnlp', cloud: 'kubernetes') : []
-    println "CICD Agent: " + cicd.build.agent
+    cicd.build.agents = (BUILD_NUMBER.toInteger() <= cicd.build.throttle) ? [name: 'base+jenkins_builder+s_micro', cloud: 'kubernetes', label:'jnlp-' + cicd.config.appLabel + '-agent'] : [name: 'base', cloud: 'kubernetes', label:'jnlp-' + cicd.config.appLabel + '-agent-base-only']
   }
 }
+
+def myX = '3'
 
 pipeline {
   options {
@@ -67,9 +70,9 @@ pipeline {
     buildDiscarder(
       logRotator(
         artifactDaysToKeepStr: '', 
-        artifactNumToKeepStr: '5', 
+        artifactNumToKeepStr: myX, 
         daysToKeepStr: '', 
-        numToKeepStr: '5'
+        numToKeepStr: myX
       )
     )
     timestamps()
@@ -78,13 +81,13 @@ pipeline {
   // ****************************************************
   // ********************** Agents **********************
   // Parametized agent - NOT WORKING!!
-  // agent { kubernetes(cicd.build.agent) }
+  agent { kubernetes(k8sagent(cicd.build.agents)) }
 
   // None. Set per stage?
   // agent none
 
   // Any
-  agent any
+  // agent any
 
   // Fixed lable
   // agent {
@@ -106,16 +109,16 @@ pipeline {
   // Kubernetes merged podTemplate via library
   // agent {
   //   // Mind the _ (underscore) in the definition. Containers themselves will have the _ exchanged for a -
-  //   kubernetes(k8sagent(name: 'base+s_micro', label: 'jnlp', cloud: 'kubernetes'))
+  //   kubernetes(k8sagent(name: 'base+jenkins_builder+s_micro', label: 'jnlp', cloud: 'kubernetes'))
   // }
-  // // ********************** Agents **********************
+  // ********************** Agents **********************
   // ****************************************************
   stages {
     stage ('Set environment') {
       // agent { kubernetes(k8sagent(name: 'base+s_micro', label: 'jnlp', cloud: 'kubernetes')) }
       when {
         beforeAgent true
-        expression { 1 == 1 }
+        expression { BUILD_NUMBER.toInteger() <= cicd.build.throttle }
       }
       steps {
         sh "echo HERE > /tmp/tessie"
@@ -125,7 +128,7 @@ pipeline {
       // agent { kubernetes(k8sagent(name: 'base+s_micro', label: 'jnlp', cloud: 'kubernetes')) }
       when {
         beforeAgent true
-        expression { 1 == 1 }
+        expression { BUILD_NUMBER.toInteger() <= cicd.build.throttle }
       }
       steps {
         sh "cat /tmp/tessie"

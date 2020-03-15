@@ -12,10 +12,9 @@ pipeline {
 post {
     always {
       script {
-        if( params.BRANCH_NAME == 'master' ){
+        if (env.BRANCH_NAME == 'master') {
           echo 'This will always run for master'
-        }
-        else {
+        } else {
           echo 'This will always run for others'
         }
       }
