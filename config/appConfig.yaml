@@ -1,0 +1,10 @@
+job:
+  debug: 1
+  throttle: 5
+build:
+  buildEnvironment: 'test'
+pr:
+  buildEnabled: 1
+  deployEnabled: 1
+  buildEnvironment: 'prod'
+  extra: 'tessie'
