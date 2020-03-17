@@ -1,3 +1,5 @@
+# Comment settings to make the global config prevail. E.g. comment "debug: 1" switch to global config.
+# The global config can be found in the custom library.
 job:
   debug: 1
   throttle: 5
