@@ -8,10 +8,10 @@ pipeline {
   options {
     buildDiscarder(
       logRotator(
-        artifactDaysToKeepStr: cicd.job.options.logRotator.artifactDaysToKeepStr
-        artifactNumToKeepStr: cicd.job.options.logRotator.artifactNumToKeepStr,
-        daysToKeepStr: cicd.job.options.logRotator.daysToKeepStr,
-        numToKeepStr: cicd.job.options.logRotator.numToKeepStr
+        artifactDaysToKeepStr : cicd.job.options.logRotator.artifactDaysToKeepStr,
+        artifactNumToKeepStr  : cicd.job.options.logRotator.artifactNumToKeepStr,
+        daysToKeepStr         : cicd.job.options.logRotator.daysToKeepStr,
+        numToKeepStr          : cicd.job.options.logRotator.numToKeepStr
       )
     )
     disableConcurrentBuilds()
