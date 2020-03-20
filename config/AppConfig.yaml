@@ -3,11 +3,11 @@ job:
   throttle: 2
 config:
   build:
-    buildEnvironment: 'test'
+    buildEnvironment: 'dev'
   pr:
     buildEnabled: 1
     deployEnabled: 0
-    buildEnvironment: 'stag'
+    buildEnvironment: 'test'
   environments:
     generic:
       agent:

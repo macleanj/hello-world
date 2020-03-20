@@ -31,16 +31,8 @@ pipeline {
     stage('Build1') {
       steps {
         sh 'echo "hello world1" '
-
-        script {
-          log.info("Info from pipeline")
-          // if (env.CICD_DEBUG == '1') {
-            debugInfo = sh(script: "printenv | sort", returnStdout: true)
-            echo "DEBUG: Pipeline Environment\n${debugInfo}"
-          // }
-          log.debug("Final CICD Configuration\n" + prettyPrint(toJson(cicd)))
-          log.debug("Final CICD Environment\n" + sh(script: "printenv | sort", returnStdout: true))
-        }
+        script { log.debug("Final CICD Configuration\n" + prettyPrint(toJson(cicd))) }
+        script { log.debug("Final CICD Environment\n" + sh(script: "printenv | sort", returnStdout: true)) }
       }
     }
   }
