@@ -1,4 +1,4 @@
-loglevel: 'TRACE'
+loglevel: 'DEBUG'
 job:
   throttle: 2
 config:
@@ -12,9 +12,4 @@ config:
     generic:
       agent:
         k8:
-          name: 'base+jenkins_builder+s_large'
-    test:
-      agent:
-        k8:
-          name: 'base+jenkins_builder+s_fast'
-      
+          name: 'base+jenkins_builder+s_micro'      
