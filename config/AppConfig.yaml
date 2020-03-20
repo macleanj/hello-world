@@ -1,13 +1,20 @@
 loglevel: 'TRACE'
 job:
-  throttle: 1
+  throttle: 2
 config:
-  agent:
-    k8:
-      name: 'base+jenkins_builder+s_micro'
   build:
-    buildEnvironment: 'dev'
+    buildEnvironment: 'test'
   pr:
     buildEnabled: 1
     deployEnabled: 0
-    buildEnvironment: 'dev'
+    buildEnvironment: 'stag'
+  environments:
+    generic:
+      agent:
+        k8:
+          name: 'base+jenkins_builder+s_large'
+    test:
+      agent:
+        k8:
+          name: 'base+jenkins_builder+s_fast'
+      
