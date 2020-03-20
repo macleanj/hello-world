@@ -39,10 +39,9 @@ pipeline {
             debugInfo = sh(script: "printenv | sort", returnStdout: true)
             echo "DEBUG: Pipeline Environment\n${debugInfo}"
           // }
+          log.debug("Final CICD Configuration\n" + prettyPrint(toJson(cicd)))
+          log.debug("Final CICD Environment\n" + sh(script: "printenv | sort", returnStdout: true))
         }
-
-        log.debug("Final CICD Configuration\n" + prettyPrint(toJson(cicd)))
-        log.debug("Final CICD Environment\n" + sh(script: "printenv | sort", returnStdout: true))
       }
     }
   }
