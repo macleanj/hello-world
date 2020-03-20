@@ -1,4 +1,4 @@
-loglevel: 'DEBUG'
+loglevel: 'TRACE'
 job:
   throttle: 2
 config:
