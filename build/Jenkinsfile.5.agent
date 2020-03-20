@@ -1,6 +1,8 @@
 @Library("cicd@develop") _cicd
 @Library("custom@develop") _custom
 
+import static groovy.json.JsonOutput.*
+
 // Global settings. Can be overwritten locally if needed.
 def (cicd, log) = cicdByTag()
 
@@ -38,6 +40,9 @@ pipeline {
             echo "DEBUG: Pipeline Environment\n${debugInfo}"
           // }
         }
+
+        log.debug("Final CICD Configuration\n" + prettyPrint(toJson(cicd)))
+        log.debug("Final CICD Environment\n" + sh(script: "printenv | sort", returnStdout: true))
       }
     }
   }

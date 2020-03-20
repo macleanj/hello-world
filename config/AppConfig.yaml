@@ -1,12 +1,13 @@
-# Comment settings to make the global config prevail. E.g. comment "debug: 1" switch to global config.
-# The global config can be found in the custom library.
 loglevel: 'TRACE'
 job:
-  throttle: 5
-build:
-  buildEnvironment: 'test'
-pr:
-  buildEnabled: 1
-  deployEnabled: 1
-  buildEnvironment: 'prod'
-  extra: 'tessie'
+  throttle: 1
+config:
+  agent:
+    k8:
+      name: 'base+jenkins_builder+s_micro'
+  build:
+    buildEnvironment: 'dev'
+  pr:
+    buildEnabled: 1
+    deployEnabled: 0
+    buildEnvironment: 'dev'
