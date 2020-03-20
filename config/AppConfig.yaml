@@ -13,8 +13,8 @@ config:
       agent:
         k8:
           name: 'base+jenkins_builder+s_large'
-    test:
-      agent:
-        k8:
-          name: 'base+jenkins_builder+s_fast'
+    # test:
+    #   agent:
+    #     k8:
+    #       name: 'base+jenkins_builder+s_fast'
       
