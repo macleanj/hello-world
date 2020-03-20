@@ -23,10 +23,9 @@ pipeline {
     timestamps()
   }
 
-  agent any
-  // agent {
-  //   kubernetes(k8sagent(name: 'base+jenkins_builder+s_micro', label: 'jnlp', cloud: 'kubernetes'))
-  // }
+  agent {
+    kubernetes(cicd.job.environment.agent.k8)
+  }
 
   stages {
     stage('Build1') {
