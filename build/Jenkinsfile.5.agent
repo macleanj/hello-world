@@ -1,0 +1,45 @@
+@Library("cicd@develop") _cicd
+@Library("custom@develop") _custom
+
+// Global settings. Can be overwritten locally if needed.
+def (cicd, log) = cicdByTag()
+
+pipeline {
+  options {
+    buildDiscarder(
+      logRotator(
+        artifactDaysToKeepStr: cicd.job.options.logRotator.artifactDaysToKeepStr
+        artifactNumToKeepStr: cicd.job.options.logRotator.artifactNumToKeepStr,
+        daysToKeepStr: cicd.job.options.logRotator.daysToKeepStr,
+        numToKeepStr: cicd.job.options.logRotator.numToKeepStr
+      )
+    )
+    disableConcurrentBuilds()
+    disableResume()
+    // skipDefaultCheckout()
+    timeout(cicd.job.options.timeout)
+    timestamps()
+  }
+
+  agent any
+  // agent {
+  //   kubernetes(k8sagent(name: 'base+jenkins_builder+s_micro', label: 'jnlp', cloud: 'kubernetes'))
+  // }
+
+  stages {
+    stage('Build1') {
+      steps {
+        sh 'echo "hello world1" '
+
+        script {
+          log.info("Info from pipeline")
+          // if (env.CICD_DEBUG == '1') {
+            debugInfo = sh(script: "printenv | sort", returnStdout: true)
+            echo "DEBUG: Pipeline Environment\n${debugInfo}"
+          // }
+        }
+      }
+    }
+  }
+}
+
