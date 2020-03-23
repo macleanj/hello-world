@@ -39,9 +39,7 @@ pipeline {
           steps {
             container ('jenkins-builder') {
               sh 'echo "jenkins-builder - Build Image - Kubernetes"'
-              withEnv(['MYTOOL_HOME=/usr/local/mytool']) {
-                sh "img build -f ${cicd.job.environment.dockerFile} -t ${cicd.job.environment.registryUrl}/${cicd.job.environment.registrySpace}/${cicd.appName}:${cicd.tag.versionId} ."
-              }
+              sh "img build -f ${cicd.job.environment.dockerFile} -t ${cicd.job.environment.registryUrl}/${cicd.job.environment.registrySpace}/${cicd.appName}:${cicd.tag.versionId} ."
             }
           }
         }
