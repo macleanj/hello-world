@@ -39,7 +39,9 @@ pipeline {
           steps {
             container ('jenkins-builder') {
               sh 'echo "jenkins-builder - Build Image - Kubernetes"'
-              sh 'img build -f Dockerfile.cicd -t ${cicd.job.environment.registryUrl}/${cicd.job.environment.registrySpace}/${cicd.appName}:${cicd.tag.versionId} .'
+              withEnv(['MYTOOL_HOME=/usr/local/mytool']) {
+                sh "img build -f ${cicd.job.environment.dockerFile} -t ${cicd.job.environment.registryUrl}/${cicd.job.environment.registrySpace}/${cicd.appName}:${cicd.tag.versionId} ."
+              }
             }
           }
         }
@@ -73,8 +75,8 @@ pipeline {
             container ('jenkins-builder') {
               sh 'echo "jenkins-builder - Publish Image - Docker Image Registry"'
               withCredentials([usernamePassword(credentialsId: cicd.job.environment.registryCredentials, usernameVariable: 'user', passwordVariable: 'pass')]) {
-                sh 'img login -u $user -p $pass ${cicd.job.environment.registryUrl}'
-                sh 'img push ${cicd.job.environment.registryUrl}/${cicd.job.environment.registrySpace}/${cicd.appName}:${cicd.tag.versionId}'
+                sh "img login -u $user -p $pass ${cicd.job.environment.registryUrl}"
+                sh "img push ${cicd.job.environment.registryUrl}/${cicd.job.environment.registrySpace}/${cicd.appName}:${cicd.tag.versionId}"
               }
             }
           }
@@ -88,9 +90,9 @@ pipeline {
             container ('jenkins-builder') {
               sh 'echo "jenkins-builder - Publish Image - OpenShift ImageStream"'
               withCredentials([usernamePassword(credentialsId: cicd.job.environment.registryCredentials, usernameVariable: 'user', passwordVariable: 'pass')]) {
-                sh 'oc login https://${cicd.job.environment.registryUrl} --token=$pass'
-                sh 'img login -u "$(oc whoami -t)" -p "$(oc whoami -t)" ${cicd.job.environment.registryUrl}'
-                sh 'img push ${cicd.job.environment.registryUrl}/${cicd.job.environment.registrySpace}/${cicd.appName}:${cicd.tag.versionId}'
+                sh "oc login https://${cicd.job.environment.registryUrl} --token=$pass"
+                sh "img login -u "$(oc whoami -t)" -p "$(oc whoami -t)" ${cicd.job.environment.registryUrl}"
+                sh "img push ${cicd.job.environment.registryUrl}/${cicd.job.environment.registrySpace}/${cicd.appName}:${cicd.tag.versionId}"
               }
             }
           }
