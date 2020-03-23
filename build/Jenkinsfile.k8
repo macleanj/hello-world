@@ -89,8 +89,8 @@ pipeline {
           steps {
             container ('jenkins-builder') {
               sh 'echo "jenkins-builder - Publish Image - OpenShift ImageStream"'
-              withCredentials([usernamePassword(credentialsId: cicd.job.environment.registryCredentials, usernameVariable: 'user', passwordVariable: 'pass')]) {
-                sh "oc login https://${cicd.job.environment.registryUrl} --token=$pass"
+              withCredentials([string(credentialsId: cicd.job.environment.registryCredentials, variable: 'token')]) {
+                sh "oc login https://${cicd.job.environment.registryUrlLogin} --token=$token"
                 sh "img login -u \$(oc whoami -t) -p \$(oc whoami -t) ${cicd.job.environment.registryUrl}"
                 sh "img push ${cicd.job.environment.registryUrl}/${cicd.job.environment.registrySpace}/${cicd.appName}:${cicd.tag.versionId}"
               }
