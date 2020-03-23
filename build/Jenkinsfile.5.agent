@@ -24,7 +24,7 @@ pipeline {
   }
 
   agent {
-    kubernetes(cicd.job.environment.agent.k8)
+    kubernetes(cicd.job.environment.agent)
   }
 
   stages {

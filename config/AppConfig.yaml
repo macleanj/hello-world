@@ -1,3 +1,4 @@
+appName: 'hello-world'
 loglevel: 'DEBUG'
 job:
   throttle: 2
@@ -11,5 +12,18 @@ config:
   environments:
     generic:
       agent:
-        k8:
-          name: 'base+jenkins_builder+s_micro'      
+        name: 'base+jenkins_builder+s_micro'
+      dockerFile: 'Dockerfile.cicd'
+    dev:
+      name: 'Development'
+      platformName: 'Local'
+      platformOwner: 'CrossLogic'
+      platformNamespace: 'na'
+
+      gitUrl: 'https://github.com'
+      gitSpace: 'TBD'
+      gitCredentials: 'github.main.cicd.api.credentials'
+      registryType: 'docker'
+      registryUrl: 'registry.hub.docker.com'
+      registrySpace: 'jmaclean'
+      registryCredentials: 'registry.dockerhub.cicd.api.credentials'
