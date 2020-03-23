@@ -35,7 +35,7 @@ pipeline {
       }
       parallel {
         stage ('Build Image - Kubernetes') {
-          when { expression { cicd.job.environment.agent.name == 'kubernetes' } }
+          when { expression { cicd.job.environment.agent.cloud == 'kubernetes' } }
           steps {
             container ('jenkins-builder') {
               sh 'echo "jenkins-builder - Build Image - Kubernetes"'
@@ -44,7 +44,7 @@ pipeline {
           }
         }
         stage ('Build Image - OpenShift') {
-          when { expression { cicd.job.environment.agent.name == 'openshift' } }
+          when { expression { cicd.job.environment.agent.cloud == 'openshift' } }
           steps {
             container ('jenkins-builder') {
               sh 'echo "jenkins-builder - Build Image - OpenShift"'
@@ -67,7 +67,7 @@ pipeline {
         stage ('Publish Image - Docker Image Registry') {
           when {
             expression { cicd.job.environment.registryType == 'docker' }
-            expression { cicd.job.environment.agent.name == 'kubernetes' }
+            expression { cicd.job.environment.agent.cloud == 'kubernetes' }
           }
           steps {
             container ('jenkins-builder') {
@@ -82,7 +82,7 @@ pipeline {
         stage ('Publish Image - OpenShift ImageStream') {
           when {
             expression { cicd.job.environment.registryType == 'imagestream' }
-            expression { cicd.job.environment.agent.name == 'kubernetes' }
+            expression { cicd.job.environment.agent.cloud == 'kubernetes' }
           }
           steps {
             container ('jenkins-builder') {
