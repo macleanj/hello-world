@@ -8,7 +8,7 @@ config:
   pr:
     buildEnabled: 1
     deployEnabled: 0
-    buildEnvironment: 'test'
+    buildEnvironment: 'dev'
   environments:
     generic:
       agent:
