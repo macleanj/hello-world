@@ -1,11 +1,16 @@
 @Library("cicd@develop") _cicd
 @Library("custom@develop") _custom
 
+import com.cicd.jenkins.pipeline.PipelineUtils
 import static groovy.json.JsonOutput.*
 
 // Global settings. Can be overwritten locally if needed.
-def (this.cicd, this.log) = cicdByTag()
-// this.cicd = cicd
+def (cicd, log) = cicdByTag()
+this.cicd = cicd
+this.cicd = log
+
+// Instantiate to be used classes
+def pipelineUtils = new PipelineUtils()
 
 log.trace("Library: \"this\" CICD Configuration\n" + prettyPrint(toJson(this.cicd)))
 
@@ -31,22 +36,22 @@ pipeline {
   }
 
   stages {
-    stage ('Build Image') {
+    stage (cicd.job.environment.stages.build) {
       when {
         expression { cicd.job.enabled == 1 }
         expression { cicd.job.buildEnabled == 1 }
-        expression { cicd.job.environment.agent.cloud == 'kubernetes' }
       }
       steps {
-        container ('jenkins-builder') {
-          sh 'echo "jenkins-builder - Build Image - Kubernetes"'
-          sh "img build -f ${cicd.job.environment.dockerFile} -t ${cicd.job.environment.registryUrl}/${cicd.job.environment.registrySpace}/${cicd.appName}:${cicd.tag.versionId} ."
+        container (cicd.job.environment.container.builder) {
+          script {
+            buildUtils.build(this)
+          }
         }
       }
     // stage: Build
     }
 
-    stage ('Publish Image') {
+    stage (cicd.job.environment.stages.publish) {
       when {
         expression { cicd.job.enabled == 1 }
         expression { cicd.job.buildEnabled == 1 }
