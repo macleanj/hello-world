@@ -35,52 +35,23 @@ pipeline {
       }
       steps {
         container ('jenkins-builder') {
-          build(this)
+          _build(this)
         }
       }
-    // stage: Build
     }
 
     stage ('Publish Image') {
       when {
         expression { cicd.job.enabled == 1 }
         expression { cicd.job.buildEnabled == 1 }
-        expression { cicd.job.environment.agent.cloud == 'kubernetes' }
       }
-      parallel {
-        stage ('Publish Image - Docker Image Registry') {
-          when {
-            expression { cicd.job.environment.registryType == 'docker' }
-          }
-          steps {
-            container ('jenkins-builder') {
-              sh 'echo "jenkins-builder - Publish Image - Docker Image Registry"'
-              withCredentials([usernamePassword(credentialsId: cicd.job.environment.registryCredentials, usernameVariable: 'user', passwordVariable: 'pass')]) {
-                sh "img login -u $user -p $pass ${cicd.job.environment.registryUrl}"
-                sh "img push ${cicd.job.environment.registryUrl}/${cicd.job.environment.registrySpace}/${cicd.appName}:${cicd.tag.versionId}"
-              }
-            }
+      steps {
+        container ('jenkins-builder') {
+          withCredentials([usernamePassword(credentialsId: cicd.job.environment.registryCredentials, usernameVariable: 'user', passwordVariable: 'pass')]) {
+            _publish(this, user, pass)
           }
         }
-        stage ('Publish Image - OpenShift ImageStream') {
-          when {
-            expression { cicd.job.environment.registryType == 'imagestream' }
-          }
-          steps {
-            container ('jenkins-builder') {
-              sh 'echo "jenkins-builder - Publish Image - OpenShift ImageStream"'
-              withCredentials([string(credentialsId: cicd.job.environment.registryCredentials, variable: 'token')]) {
-                sh "img tag ${cicd.job.environment.registryUrl}/${cicd.job.environment.registrySpace}/${cicd.appName}:${cicd.tag.versionId} ${cicd.job.environment.registryUrlLogin}/${cicd.job.environment.registrySpace}/${cicd.appName}:${cicd.tag.versionId}"
-                sh "oc login https://${cicd.job.environment.registryUrlLogin} --token=$token"
-                sh "img login -u \$(oc whoami -t) -p \$(oc whoami -t) ${cicd.job.environment.registryUrlLogin}"
-                sh "img push ${cicd.job.environment.registryUrlLogin}/${cicd.job.environment.registrySpace}/${cicd.appName}:${cicd.tag.versionId}"
-              }
-            }
-          }
-        }
-      // parallel
       }
-    // stage: Publish
     }
 
   // stages
