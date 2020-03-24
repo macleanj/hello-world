@@ -1,13 +1,10 @@
 @Library("cicd@develop") _cicd
 @Library("custom@develop") _custom
 
-import com.cicd.jenkins.pipeline.PipelineUtils
-import static groovy.json.JsonOutput.*
-
 // Global settings. Can be overwritten locally if needed.
 def (cicd, log) = cicdByTag()
 this.cicd = cicd
-this.cicd = log
+this.log = log
 
 log.trace("Library: \"this\" CICD Configuration\n" + prettyPrint(toJson(this.cicd)))
 
@@ -40,11 +37,7 @@ pipeline {
       }
       steps {
         container ('jenkins-builder') {
-          script {
-            // Instantiate to be used classes
-            def pipelineUtils = new PipelineUtils()
-            buildUtils.build(this)
-          }
+          build(this)
         }
       }
     // stage: Build
