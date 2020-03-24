@@ -34,9 +34,9 @@ pipeline {
         expression { cicd.job.buildEnabled == 1 }
       }
       steps {
-        container ('jenkins-builder') {
+        // container ('jenkins-builder') {
           _build(this)
-        }
+        // }
       }
     }
 
@@ -46,11 +46,11 @@ pipeline {
         expression { cicd.job.buildEnabled == 1 }
       }
       steps {
-        container ('jenkins-builder') {
+        // container ('jenkins-builder') {
           withCredentials([usernamePassword(credentialsId: cicd.job.environment.registryCredentials, usernameVariable: 'user', passwordVariable: 'pass')]) {
             _publish(this, user, pass)
           }
-        }
+        // }
       }
     }
 
