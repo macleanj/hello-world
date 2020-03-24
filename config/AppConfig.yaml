@@ -12,7 +12,7 @@ config:
   environments:
     generic:
       agent:
-        name: 'base+jenkins_builder+s_micro'
+        name: 's_micro'
       dockerFile: 'Dockerfile.cicd'
     dev:
       name: 'Development'
