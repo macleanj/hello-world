@@ -4,8 +4,10 @@
 import static groovy.json.JsonOutput.*
 
 // Global settings. Can be overwritten locally if needed.
-// def (cicd, log) = cicdByTag()
-(this.cicd, this.log) = cicdByTag()
+def (cicd, log) = cicdByTag()
+this.cicd = cicd
+
+log.trace("Library: \"this\" CICD Configuration\n" + prettyPrint(toJson(this.cicd)))
 
 pipeline {
   options {
