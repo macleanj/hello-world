@@ -9,9 +9,6 @@ def (cicd, log) = cicdByTag()
 this.cicd = cicd
 this.cicd = log
 
-// Instantiate to be used classes
-def pipelineUtils = new PipelineUtils()
-
 log.trace("Library: \"this\" CICD Configuration\n" + prettyPrint(toJson(this.cicd)))
 
 pipeline {
@@ -44,6 +41,8 @@ pipeline {
       steps {
         container ('jenkins-builder') {
           script {
+            // Instantiate to be used classes
+            def pipelineUtils = new PipelineUtils()
             buildUtils.build(this)
           }
         }
