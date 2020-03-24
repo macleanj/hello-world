@@ -35,15 +35,12 @@ pipeline {
       when {
         expression { cicd.job.enabled == 1 }
         expression { cicd.job.buildEnabled == 1 }
-        cicd.job.environment.agent.cloud == 'kubernetes' }
+        expression { cicd.job.environment.agent.cloud == 'kubernetes' }
       }
-        stage ('Build Image - Kubernetes') {
-          steps {
-            container ('jenkins-builder') {
-              sh 'echo "jenkins-builder - Build Image - Kubernetes"'
-              sh "img build -f ${cicd.job.environment.dockerFile} -t ${cicd.job.environment.registryUrl}/${cicd.job.environment.registrySpace}/${cicd.appName}:${cicd.tag.versionId} ."
-            }
-          }
+      steps {
+        container ('jenkins-builder') {
+          sh 'echo "jenkins-builder - Build Image - Kubernetes"'
+          sh "img build -f ${cicd.job.environment.dockerFile} -t ${cicd.job.environment.registryUrl}/${cicd.job.environment.registrySpace}/${cicd.appName}:${cicd.tag.versionId} ."
         }
       }
     // stage: Build
