@@ -6,8 +6,6 @@ def (cicd, log) = cicdByTag()
 this.cicd = cicd
 this.log = log
 
-log.trace("Library: \"this\" CICD Configuration\n" + prettyPrint(toJson(this.cicd)))
-
 pipeline {
   options {
     buildDiscarder(
