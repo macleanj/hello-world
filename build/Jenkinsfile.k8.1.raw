@@ -4,8 +4,7 @@
 import static groovy.json.JsonOutput.*
 
 // Global settings. Can be overwritten locally if needed.
-// def (cicd, log) = cicdByTag()
-(this.cicd, this.log) = cicdByTag()
+def (cicd, log) = cicdByTag()
 
 pipeline {
   options {
@@ -33,13 +32,25 @@ pipeline {
       when {
         expression { cicd.job.enabled == 1 }
         expression { cicd.job.buildEnabled == 1 }
-        cicd.job.environment.agent.cloud == 'kubernetes' }
       }
+      parallel {
         stage ('Build Image - Kubernetes') {
+          when { expression { cicd.job.environment.agent.cloud == 'kubernetes' } }
           steps {
             container ('jenkins-builder') {
               sh 'echo "jenkins-builder - Build Image - Kubernetes"'
               sh "img build -f ${cicd.job.environment.dockerFile} -t ${cicd.job.environment.registryUrl}/${cicd.job.environment.registrySpace}/${cicd.appName}:${cicd.tag.versionId} ."
+            }
+          }
+        }
+        stage ('Build Image - OpenShift') {
+          when { expression { cicd.job.environment.agent.cloud == 'openshift' } }
+          steps {
+            container ('jenkins-builder') {
+              sh 'echo "jenkins-builder - Build Image - OpenShift"'
+              script {
+                _openshiftBuilder.build()
+              }
             }
           }
         }
@@ -51,12 +62,12 @@ pipeline {
       when {
         expression { cicd.job.enabled == 1 }
         expression { cicd.job.buildEnabled == 1 }
-        expression { cicd.job.environment.agent.cloud == 'kubernetes' }
       }
       parallel {
         stage ('Publish Image - Docker Image Registry') {
           when {
             expression { cicd.job.environment.registryType == 'docker' }
+            expression { cicd.job.environment.agent.cloud == 'kubernetes' }
           }
           steps {
             container ('jenkins-builder') {
@@ -71,6 +82,7 @@ pipeline {
         stage ('Publish Image - OpenShift ImageStream') {
           when {
             expression { cicd.job.environment.registryType == 'imagestream' }
+            expression { cicd.job.environment.agent.cloud == 'kubernetes' }
           }
           steps {
             container ('jenkins-builder') {
