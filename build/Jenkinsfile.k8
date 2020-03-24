@@ -42,7 +42,7 @@ pipeline {
         expression { cicd.job.buildEnabled == 1 }
       }
       steps {
-        container (cicd.job.environment.container.builder) {
+        container ('jenkins-builder') {
           script {
             buildUtils.build(this)
           }
