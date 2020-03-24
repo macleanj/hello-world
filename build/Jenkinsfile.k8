@@ -36,7 +36,7 @@ pipeline {
   }
 
   stages {
-    stage (cicd.job.environment.stages.build) {
+    stage ('Build Image') {
       when {
         expression { cicd.job.enabled == 1 }
         expression { cicd.job.buildEnabled == 1 }
@@ -51,7 +51,7 @@ pipeline {
     // stage: Build
     }
 
-    stage (cicd.job.environment.stages.publish) {
+    stage ('Publish Image') {
       when {
         expression { cicd.job.enabled == 1 }
         expression { cicd.job.buildEnabled == 1 }
