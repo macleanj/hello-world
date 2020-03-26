@@ -11,6 +11,8 @@ config:
     buildEnvironment: 'dev'
   environments:
     generic:
+      # appNamePrefix: 'prefix-'
+      # appNamePostfix: '-postfix'
       agent:
         name: 's_micro'
       dockerFile: 'Dockerfile.cicd'
