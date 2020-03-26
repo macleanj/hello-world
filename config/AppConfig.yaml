@@ -4,7 +4,7 @@ job:
   throttle: 5
 config:
   build:
-    buildEnvironment: 'test'
+    buildEnvironment: 'prod'
   pr:
     buildEnabled: 1
     deployEnabled: 0
