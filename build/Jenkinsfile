@@ -1,44 +1,58 @@
+@Library("cicd@develop") _cicd
+@Library("custom@develop") _custom
+
+// Global settings. Can be overwritten locally if needed.
+def (cicd, log) = cicdByTag()
+this.cicd = cicd
+this.log = log
+
 pipeline {
-  environment {
-    registry = "jmaclean/cicd-triggered-by-tag"
-    registryCredential = 'futurice-jmaclean-docker'
-    dockerImage = ''
-
-    dockerRegistry = "jmaclean/cicd-triggered-by-tag"
-    dockerPath = 'build'
-    dockerFile = 'Dockerfile'
-    imageGroup = 'tdd/' // If any, otherwise leave blank. Example: "imageGroup = 'tdd/'"
-    imageName = 'pdi-kettle'
-    imageVersion = '8.2.0.0-342'
-    imagePath = "${imageGroup}${imageName}"
-    buildTag = "${GIT_COMMIT}-b${BUILD_NUMBER}"
-    versionTag = "${imageVersion}-b${BUILD_NUMBER}"
+  options {
+    buildDiscarder(
+      logRotator(
+        artifactDaysToKeepStr : cicd.job.options.logRotator.artifactDaysToKeepStr,
+        artifactNumToKeepStr  : cicd.job.options.logRotator.artifactNumToKeepStr,
+        daysToKeepStr         : cicd.job.options.logRotator.daysToKeepStr,
+        numToKeepStr          : cicd.job.options.logRotator.numToKeepStr
+      )
+    )
+    disableConcurrentBuilds()
+    disableResume()
+    // skipDefaultCheckout()
+    timeout(cicd.job.options.timeout)
+    timestamps()
   }
-  
-agent any
 
-stages {
-    stage('Get environment variables') {
+  agent {
+    kubernetes(cicd.job.environment.agent)
+  }
+
+  stages {
+    stage ('Build Image') {
+      when {
+        expression { cicd.job.enabled == 1 }
+        expression { cicd.job.buildEnabled == 1 }
+      }
       steps {
-LAST_GIT_BUILD_TAG=$(git tag | sort | egrep "^v-" | tail -1)
-LAST_GIT_DEPLOY_TAG=$(git tag | sort | egrep "^d-" | tail -1)
-
-echo "
------ GIT ----- GIT ----- GIT ----- GIT ----- GIT -----
-GIT_COMMIT: $GIT_COMMIT
-GIT_BRANCH $GIT_BRANCH
-GIT_PREVIOUS_COMMIT $GIT_PREVIOUS_COMMIT
-GIT_PREVIOUS_SUCCESSFUL_COMMIT $GIT_PREVIOUS_SUCCESSFUL_COMMIT
-GIT_URL $GIT_URL
-GIT_AUTHOR_NAME $(git show -s --pretty=%an)
-GIT_COMMITTER_EMAIL $GIT_COMMITTER_EMAIL
-
-LAST_GIT_BUILD_TAG: $LAST_GIT_BUILD_TAG
-LAST_GIT_BUILD_TAG_COMMIT: $(git rev-list -1 $LAST_GIT_BUILD_TAG)
-LAST_GIT_DEPLOY_TAG: $LAST_GIT_DEPLOY_TAG
-LAST_GIT_DEPLOY_TAG_COMMIT: $(git rev-list -1 $LAST_GIT_DEPLOY_TAG)
-" 2>&1 >/dev/null
+        _build(this)
       }
     }
+
+    stage ('Publish Image') {
+      when {
+        expression { cicd.job.enabled == 1 }
+        expression { cicd.job.buildEnabled == 1 }
+      }
+      steps {
+        withCredentials([usernamePassword(credentialsId: cicd.job.environment.registryCredentials, usernameVariable: 'user', passwordVariable: 'pass')]) {
+          _publish(this, user, pass)
+        }
+      }
+    }
+
+  // stages
   }
+
+// pipeline
 }
+

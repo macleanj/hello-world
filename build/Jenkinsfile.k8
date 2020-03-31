@@ -34,7 +34,9 @@ pipeline {
         expression { cicd.job.buildEnabled == 1 }
       }
       steps {
-        _build(this)
+        withCredentials([usernamePassword(credentialsId: cicd.job.environment.registryCredentials, usernameVariable: 'user', passwordVariable: 'pass')]) {
+          _build(this, user, pass)
+        }
       }
     }
 
