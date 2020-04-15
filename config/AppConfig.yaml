@@ -1,3 +1,4 @@
+appFamily: 'wins'
 appName: 'hello-world'
 loglevel: 'TRACE'
 job:
