@@ -5,11 +5,11 @@ job:
   throttle: 5
 config:
   build:
-    buildEnvironment: 'int'
+    buildEnvironment: 'cicd_dev_only'
   pr:
     buildEnabled: 1
     deployEnabled: 0
-    buildEnvironment: 'dev'
+    buildEnvironment: 'cicd_dev_only'
   environments:
     generic:
       # appNamePrefix: 'prefix-'
@@ -24,7 +24,6 @@ config:
       platformNamespace: 'na'
 
       gitUrl: 'https://github.com'
-      gitSpace: 'TBD'
       gitCredentials: 'github.main.cicd.api.credentials'
       registryType: 'docker'
       registryUrl: 'registry.hub.docker.com'
