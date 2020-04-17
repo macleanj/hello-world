@@ -23,7 +23,6 @@ config:
       platformOwner: 'CrossLogic'
       platformNamespace: 'na'
 
-      gitUrl: 'https://github.com'
       gitCredentials: 'github.main.cicd.api.credentials'
       registryType: 'docker'
       registryUrl: 'registry.hub.docker.com'
