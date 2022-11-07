@@ -2,8 +2,11 @@
 # Build a Docker image
 # https://docs.microsoft.com/azure/devops/pipelines/languages/docker
 
+# Parametized variables
+# https://developercommunity.visualstudio.com/t/azure-pipelines-passing-a-variable-as-a-parameter/429990
+
 trigger:
-- master
+- azure-pipelines
 
 resources:
 - repo: self
@@ -18,7 +21,7 @@ stages:
   - job: Build
     displayName: Build
     pool:
-      vmImage: ubuntu-latest
+      vmImage: ubuntu-20.04
     steps:
     - task: Docker@2
       displayName: Build an image
