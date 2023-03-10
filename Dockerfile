@@ -1,5 +1,8 @@
 FROM nginxinc/nginx-unprivileged:1.18-alpine
 
+LABEL maintainer="Jerome Mac Lean"
+LABEL description="Small hello-world application to test Cloud and CICD solutions"
+
 #
 # set base environment variables
 #
