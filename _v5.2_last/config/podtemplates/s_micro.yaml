@@ -1,0 +1,12 @@
+spec:
+  containers:
+  - name: jenkins-builder
+    resources:
+      requests:
+        memory: 64Mi
+        cpu: 250m
+        ephemeral-storage: 1Gi
+      limits:
+        memory: 128Mi
+        cpu: 500m
+        ephemeral-storage: 4Gi

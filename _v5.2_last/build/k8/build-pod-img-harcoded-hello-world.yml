@@ -1,0 +1,66 @@
+# Testing only: Docker image is complete configured and build from within the podTemplate. No command needed in the Jenkinsfile
+# Status:
+# - Jenkins job execution: FAILURE -> Job never finished because setting "workingDir: /home/jenkins/agent" is not satisfied.
+# - Image creation: Successfully built docker.io/jmaclean/hello-world-test:latest -> Checked via: kubectl logs -c jenkins-builder jnlp-14lzh-kgz2m
+
+kind: Pod
+metadata:
+  name: jnlp
+  annotations:
+    container.apparmor.security.beta.kubernetes.io/jenkins-builder: unconfined
+spec:
+  # securityContext:
+  #   serviceAccountName: jenkins # OpenShift
+  initContainers:
+    # This container clones the desired git repo to the EmptyDir volume.
+    - name: git-clone
+      image: r.j3ss.co/jq
+      args:
+        - git
+        - clone
+        - --single-branch
+        - --branch
+        - develop
+        - https://github.com/macleanj/hello-world.git
+        - /repo # Put it in the volume
+      securityContext:
+        runAsUser: 1000 # Kubernetes
+        allowPrivilegeEscalation: false
+        readOnlyRootFilesystem: true
+      volumeMounts:
+        - name: git-repo
+          mountPath: /repo
+  containers:
+  - name: jnlp
+    # image: jenkins/jnlp-slave:3.40-1
+    image: jmaclean/jenkins-jnlp-slave:3.40-1
+    imagePullPolicy: Always
+    workingDir: /home/jenkins/agent
+    securityContext:
+      runAsUser: 1000 # Kubernetes
+  - name: jenkins-builder
+    # image: r.j3ss.co/img:v0.5.7
+    image: jmaclean/jenkins-builder:0.5.7
+    imagePullPolicy: Always    
+    resources: {}
+    workingDir: /repo
+    command:
+    - img
+    - build
+    - -t
+    - jmaclean/hello-world-test
+    - .
+    securityContext:
+      runAsUser: 1000 # Kubernetes
+      rawProc: true
+    volumeMounts:
+    - name: cache-volume
+      mountPath: /tmp
+    - name: git-repo
+      mountPath: /repo
+  volumes:
+  - name: cache-volume
+    emptyDir: {}
+  - name: git-repo
+    emptyDir: {}
+  restartPolicy: Never

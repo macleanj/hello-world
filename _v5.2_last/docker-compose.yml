@@ -1,0 +1,21 @@
+version: "3.7"
+
+services:
+  hello-world:
+    hostname: hello-world
+    container_name: hello-world
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: jmaclean/hello-world:v5
+    # env_file order matters. The last one is leading
+    env_file:
+      - config/generic.conf
+      - config/deploy_dev.conf
+    ports:
+      - "80:8080"
+      - "443:8443"
+    volumes: 
+      - ./build/app/www:/app
+      - ./build/app/data:/data # For fast development
+      # - ./config:/config

@@ -1,0 +1,109 @@
+@Library("cicd@develop") _cicd
+@Library("custom@develop") _custom
+
+import static groovy.json.JsonOutput.*
+
+// Global settings. Can be overwritten locally if needed.
+def (cicd, log) = cicdByTag()
+
+pipeline {
+  options {
+    buildDiscarder(
+      logRotator(
+        artifactDaysToKeepStr : cicd.job.options.logRotator.artifactDaysToKeepStr,
+        artifactNumToKeepStr  : cicd.job.options.logRotator.artifactNumToKeepStr,
+        daysToKeepStr         : cicd.job.options.logRotator.daysToKeepStr,
+        numToKeepStr          : cicd.job.options.logRotator.numToKeepStr
+      )
+    )
+    disableConcurrentBuilds()
+    disableResume()
+    // skipDefaultCheckout()
+    timeout(cicd.job.options.timeout)
+    timestamps()
+  }
+
+  agent {
+    kubernetes(cicd.job.environment.agent)
+  }
+
+  stages {
+    stage ('Build Image') {
+      when {
+        expression { cicd.job.enabled == 1 }
+        expression { cicd.job.buildEnabled == 1 }
+      }
+      parallel {
+        stage ('Build Image - Kubernetes') {
+          when { expression { cicd.job.environment.agent.cloud == 'kubernetes' } }
+          steps {
+            container ('jenkins-builder') {
+              sh 'echo "jenkins-builder - Build Image - Kubernetes"'
+              sh "img build -f ${cicd.job.environment.dockerFile} -t ${cicd.job.environment.registryUrl}/${cicd.job.environment.registrySpace}/${cicd.appName}:${cicd.tag.versionId} ."
+            }
+          }
+        }
+        stage ('Build Image - OpenShift') {
+          when { expression { cicd.job.environment.agent.cloud == 'openshift' } }
+          steps {
+            container ('jenkins-builder') {
+              sh 'echo "jenkins-builder - Build Image - OpenShift"'
+              script {
+                _openshiftBuilder.build()
+              }
+            }
+          }
+        }
+      }
+    // stage: Build
+    }
+
+    stage ('Publish Image') {
+      when {
+        expression { cicd.job.enabled == 1 }
+        expression { cicd.job.buildEnabled == 1 }
+      }
+      parallel {
+        stage ('Publish Image - Docker Image Registry') {
+          when {
+            expression { cicd.job.environment.registryType == 'docker' }
+            expression { cicd.job.environment.agent.cloud == 'kubernetes' }
+          }
+          steps {
+            container ('jenkins-builder') {
+              sh 'echo "jenkins-builder - Publish Image - Docker Image Registry"'
+              withCredentials([usernamePassword(credentialsId: cicd.job.environment.registryCredentials, usernameVariable: 'user', passwordVariable: 'pass')]) {
+                sh "img login -u $user -p $pass ${cicd.job.environment.registryUrl}"
+                sh "img push ${cicd.job.environment.registryUrl}/${cicd.job.environment.registrySpace}/${cicd.appName}:${cicd.tag.versionId}"
+              }
+            }
+          }
+        }
+        stage ('Publish Image - OpenShift ImageStream') {
+          when {
+            expression { cicd.job.environment.registryType == 'imagestream' }
+            expression { cicd.job.environment.agent.cloud == 'kubernetes' }
+          }
+          steps {
+            container ('jenkins-builder') {
+              sh 'echo "jenkins-builder - Publish Image - OpenShift ImageStream"'
+              withCredentials([string(credentialsId: cicd.job.environment.registryCredentials, variable: 'token')]) {
+                sh "img tag ${cicd.job.environment.registryUrl}/${cicd.job.environment.registrySpace}/${cicd.appName}:${cicd.tag.versionId} ${cicd.job.environment.registryUrlLogin}/${cicd.job.environment.registrySpace}/${cicd.appName}:${cicd.tag.versionId}"
+                sh "oc login https://${cicd.job.environment.registryUrlLogin} --token=$token"
+                sh "img login -u \$(oc whoami -t) -p \$(oc whoami -t) ${cicd.job.environment.registryUrlLogin}"
+                sh "img push ${cicd.job.environment.registryUrlLogin}/${cicd.job.environment.registrySpace}/${cicd.appName}:${cicd.tag.versionId}"
+              }
+            }
+          }
+        }
+      // parallel
+      }
+    // stage: Publish
+    }
+
+  // stages
+  }
+
+// pipeline
+}
+
