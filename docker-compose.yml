@@ -1,0 +1,19 @@
+version: "3.7"
+
+services:
+  hello-world:
+    hostname: hello-world
+    container_name: hello-world
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: jmaclean/hello-world:6.0
+    ports:
+      - "80:8080"
+      - "443:8443"
+    volumes:
+      - ./emptyDir/run:/run
+      - ./emptyDir/tmp:/tmp
+      - ./emptyDir/app/scratch:/app/scratch
+      - ./emptyDir/var/cache/nginx/:/var/cache/nginx/
+      - ./emptyDir/var/log/nginx/:/var/log/nginx/
