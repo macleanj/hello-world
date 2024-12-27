@@ -59,6 +59,9 @@ COPY target ${APP_PUBLISH}
 #
 RUN chown -R ${RUN_AS_USER}:${RUN_AS_GROUP} ${APP_HOME} \
     && chmod u+x ${APP_HOME}/entrypoint.sh
-
+# Needed for OpenShift Arbitrary User IDs
+RUN chgrp -R 0 ${APP_HOME} && \
+    chmod -R g+rwX ${APP_HOME}
+  
 USER ${RUN_AS_USER}
 ENTRYPOINT ["/app/entrypoint.sh"]
