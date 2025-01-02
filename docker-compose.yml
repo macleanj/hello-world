@@ -7,11 +7,12 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    image: jmaclean/hello-world:6.0
+    image: jmaclean/hello-world:6.2
     ports:
       - "80:8080"
       - "443:8443"
     volumes:
+      - ./ssl/certs:/app/conf/ssl/certs
       - ./emptyDir/run:/run
       - ./emptyDir/tmp:/tmp
       - ./emptyDir/app/scratch:/app/scratch

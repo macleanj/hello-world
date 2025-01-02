@@ -1,3 +1,15 @@
+######################
+# Security           #
+######################
+*.pem
+*.pub
+*.base64
+*-rsa
+*.crt
+*.csr
+*.key
+*.pfx
+
 #configuration files
 *config.sh
 .env
